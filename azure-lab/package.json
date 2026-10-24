@@ -1,0 +1,27 @@
+{
+  "name": "pixpro-azure-lab",
+  "version": "1.0.0",
+  "description": "Laboratorio DS5 Semana 5: Event Sourcing, Outbox + CDC, SAGA y resiliencia con Azure Functions (Node.js)",
+  "main": "src/functions/*.js",
+  "private": true,
+  "scripts": {
+    "start": "func start",
+    "azurite": "azurite --silent --location .azurite",
+    "test": "node --test \"test/*.test.mjs\"",
+    "demo:particiones": "node scripts/particiones.mjs",
+    "demo:latencia": "node scripts/latencia.mjs",
+    "demo:versionado": "node scripts/versionado.mjs",
+    "demo:replay": "node scripts/replay-local.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@azure/cosmos": "^4.2.0",
+    "@azure/data-tables": "^13.3.0",
+    "@azure/functions": "^4.7.0",
+    "@azure/service-bus": "^7.9.5",
+    "durable-functions": "^3.1.0"
+  },
+  "devDependencies": {
+    "azurite": "^3.33.0"
+  }
+}

@@ -1,0 +1,6 @@
+node_modules
+dist
+.env
+.env.local
+# La clave de respuestas en claro NUNCA se sube al repositorio
+private/

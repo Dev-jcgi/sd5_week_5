@@ -1,0 +1,42 @@
+<section id="fuera-orden" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">03 · Mensajes fuera de orden</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">El número de versión pone orden</h2>
+<x-embed style="position:absolute;left:128px;top:310px;width:1664px;height:420px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-monospace,Menlo,Consolas,monospace;color:#EEF0E8;overflow:hidden}
+.m{position:absolute;width:300px;height:70px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#0B0E13}
+.box{position:absolute;left:1180px;top:30px;width:484px;height:330px;border-radius:20px;background:#141A22;border:3px solid #2B3647;padding:20px;box-sizing:border-box}
+.box h4{margin:0 0 14px;font-size:24px;color:#A7B0BE}
+.st{font-size:44px;font-weight:700}
+.lg{font-size:24px;color:#A7B0BE;margin-top:16px;line-height:1.5}
+.lane{position:absolute;left:0;top:160px;width:1120px;height:4px;background:#2B3647}
+</style></head><body>
+<div class="lane"></div>
+<div class="m" id="a" style="background:#6EA8FF">v2 procesando</div>
+<div class="m" id="b" style="background:#C6F33A">v3 completado</div>
+<div class="box"><h4>ESTADO DEL LOTE (consumidor)</h4><div class="st" id="st">v1 creado</div><div class="lg" id="lg"></div></div>
+<script>
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const mv=(el,y,ms)=>el.animate([{left:'0px',top:y+'px'},{left:'860px',top:'125px'}],{duration:ms,fill:'forwards',easing:'ease-in'}).finished;
+async function go(){for(;;){
+ let v=1;$('st').textContent='v1 creado';$('st').style.color='#EEF0E8';$('lg').innerHTML='Llega primero el más rápido…';
+ $('a').style.left=$('b').style.left='-400px';
+ await Promise.all([mv($('b'),60,1300),sleep(0)]);
+ $('b').animate([{opacity:1},{opacity:0}],{duration:300,fill:'forwards'});
+ v=3;$('st').textContent='v3 completado';$('st').style.color='#C6F33A';$('lg').innerHTML='✓ aplica v3 (versión 3 &gt; 1)';
+ await sleep(900);
+ $('a').animate([{opacity:1}],{duration:1,fill:'forwards'});await mv($('a'),240,1300);
+ $('a').animate([{opacity:1},{opacity:0}],{duration:300,fill:'forwards'});
+ $('lg').innerHTML='✓ aplica v3<br><span style="color:#FF8A3D">✗ descarta v2: versión 2 &lt; 3 (llegó tarde)</span>';
+ $('st').animate([{transform:'scale(1.1)'},{transform:'none'}],{duration:400});
+ await sleep(3600);
+ $('b').animate([{opacity:1}],{duration:1,fill:'forwards'});
+}}
+go();
+</script></body></html></x-embed>
+<div style="position:absolute;left:128px;top:760px;width:1664px;display:flex;flex-direction:row;gap:20px">
+<p style="flex:1;font-size:26px;line-height:1.35"><b style="color:#6EA8FF">Versionar:</b> <span style="color:#A7B0BE">cada evento lleva versión o timestamp.</span></p>
+<p style="flex:1;font-size:26px;line-height:1.35"><b style="color:#C6F33A">Particionar end-to-end:</b> <span style="color:#A7B0BE">misma clave, mismo orden.</span></p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5 (Versionado de eventos para mensajes fuera de orden; Particionamiento end-to-end)</p>
+
+</section>

@@ -1,0 +1,49 @@
+<section id="saga-anim" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">02 · SAGA en PixPro · Falla el CDN</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">Avanzar hacia adelante, compensar hacia atrás</h2>
+<x-embed style="position:absolute;left:128px;top:320px;width:1664px;height:560px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.s{position:absolute;top:80px;width:330px;height:130px;border-radius:20px;background:#141A22;border:3px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.s small{font:400 24px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.c{position:absolute;top:340px;width:330px;height:110px;border-radius:20px;background:#1F1410;border:3px dashed #FF8A3D;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#FFB680;opacity:0}
+.c small{font:400 24px ui-monospace,Menlo,Consolas,monospace;color:#C99A7A}
+svg{position:absolute;left:0;top:0}
+.cap{position:absolute;left:0;top:490px;width:1664px;text-align:center;font-size:28px}
+</style></head><body>
+<svg width="1664" height="480" fill="none">
+<path id="f1" d="M330 145H444" stroke="#C6F33A" stroke-width="6"/><path id="f2" d="M774 145H888" stroke="#C6F33A" stroke-width="6"/><path id="f3" d="M1218 145H1332" stroke="#FF6B8B" stroke-width="6"/>
+<path id="b1" d="M1110 210C1110 290 610 300 609 340" stroke="#FF8A3D" stroke-width="5" stroke-dasharray="14 10"/>
+<path id="b2" d="M609 450C609 520 165 520 165 450" stroke="#FF8A3D" stroke-width="5" stroke-dasharray="14 10"/>
+</svg>
+<div class="s" id="s0" style="left:0">Créditos<small>CreditosReservados</small></div>
+<div class="s" id="s1" style="left:444px">Digester<small>ImagenesProcesadas</small></div>
+<div class="s" id="s2" style="left:888px">CDN<small>PublicacionFallida</small></div>
+<div class="s" id="s3" style="left:1332px">Notifier<small>nunca llega</small></div>
+<div class="c" id="c1" style="left:444px">Descartar resultados<small>compensa paso 2</small></div>
+<div class="c" id="c0" style="left:0">Liberar créditos<small>compensa paso 1</small></div>
+<div class="cap" id="cap"></div>
+<script>
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const say=(t,c)=>{$('cap').textContent=t;$('cap').style.color=c||'#EEF0E8';$('cap').animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const draw=(id,ms)=>{const p=$(id),L=p.getTotalLength();p.style.strokeDasharray=p.getAttribute('stroke-dasharray')?'14 10':L;return p.animate([{strokeDashoffset:L,opacity:1},{strokeDashoffset:0,opacity:1}],{duration:ms,fill:'forwards',easing:'ease-in-out'})};
+const hide=id=>$(id).animate([{opacity:0}],{duration:1,fill:'forwards'});
+const lit=(id,c,bg)=>$(id).animate([{borderColor:c,background:bg||'#141A22',transform:'translateY(-8px)'},{borderColor:c,background:bg||'#141A22',transform:'none'}],{duration:500,fill:'forwards'});
+async function go(){for(;;){
+ document.querySelectorAll('.s,.c,path').forEach(e=>e.getAnimations().forEach(a=>a.cancel()));['f1','f2','f3','b1','b2'].forEach(hide);
+ say('1 · Créditos reservados');lit('s0','#C6F33A');await sleep(1100);
+ await draw('f1',500).finished;say('2 · Imágenes procesadas');lit('s1','#C6F33A');await sleep(1100);
+ await draw('f2',500).finished;say('3 · El CDN no responde: falla permanente','#FF6B8B');lit('s2','#FF6B8B','#3A1620');await sleep(800);
+ draw('f3',400);$('s3').animate([{opacity:1},{opacity:.3}],{duration:500,fill:'forwards'});await sleep(1200);
+ say('4 · Se compensa en orden inverso: primero el Digester…','#FF8A3D');
+ const b=$('b1'),L=b.getTotalLength();b.animate([{opacity:1,strokeDashoffset:L},{opacity:1,strokeDashoffset:0}],{duration:900,fill:'forwards'});await sleep(900);
+ $('c1').animate([{opacity:0,transform:'scale(.8)'},{opacity:1,transform:'none'}],{duration:450,fill:'forwards'});await sleep(1300);
+ say('5 · …y luego los créditos. El usuario recibe “no se pudo publicar”','#FF8A3D');
+ $('b2').animate([{opacity:1,strokeDashoffset:L},{opacity:1,strokeDashoffset:0}],{duration:900,fill:'forwards'});await sleep(900);
+ $('c0').animate([{opacity:0,transform:'scale(.8)'},{opacity:1,transform:'none'}],{duration:450,fill:'forwards'});
+ await sleep(3800);
+}}
+go();
+</script></body></html></x-embed>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Mismo flujo que la Demo 3 del laboratorio (Durable Functions) · flujo PixPro ilustrativo</p>
+
+</section>

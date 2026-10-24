@@ -1,0 +1,23 @@
+<section id="esquemas" data-transition="push" style="background:#F2F1EA;color:#10141A;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C2410C;text-transform:uppercase">04 · Diseño de esquemas de eventos</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">El tamaño del evento también es latencia</h2>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;background:#FBFBF8;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:32px;font-weight:700">Pequeño</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;background:#10141A;color:#C6F33A;padding:12px 16px;border-radius:10px">{ loteId, estado }</p>
+<p style="font-size:24px;line-height:1.4;color:#4A5363">Viaja rápido y evoluciona fácil; el consumidor consulta el resto.</p>
+</div>
+<div style="flex:1;background:#FBFBF8;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:32px;font-weight:700">Grande y desnormalizado</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;background:#10141A;color:#FF8A3D;padding:12px 16px;border-radius:10px">{ lote, imágenes[], usuario }</p>
+<p style="font-size:24px;line-height:1.4;color:#4A5363">Sin llamadas extra; más red y difícil de cambiar sin romper.</p>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+<p style="font-size:24px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 20px;border-radius:12px"><b>Event Storming</b> para descubrir eventos, productores y consumidores.</p>
+<p style="font-size:24px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 20px;border-radius:12px"><b>Involucra a los consumidores</b> antes de fijar el esquema.</p>
+<p style="font-size:24px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 20px;border-radius:12px"><b>Versiona</b>: campos opcionales, schemaVersion y deprecación gradual.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5B6372">Fuente: SD5 – Semana 5 (Elegir el diseño correcto de esquema; “Choosing the Correct Event Schema Design”, SpringerLink)</p>
+
+</section>

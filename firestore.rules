@@ -1,0 +1,41 @@
+rules_version = '2';
+// Reglas de seguridad de PixPro Arena.
+// IMPORTANTE: reemplaza profesor@tu-dominio.com por el correo de la cuenta del profesor
+// (el mismo valor que VITE_HOST_EMAIL). Solo esa cuenta puede abrir salas, avanzar
+// diapositivas, lanzar preguntas y calcular puntajes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isHost() {
+      return request.auth != null && request.auth.token.email == 'profesor@tu-dominio.com';
+    }
+    function signedIn() { return request.auth != null; }
+
+    match /rooms/{pin} {
+      allow read: if signedIn();
+      allow write: if isHost();
+
+      // Jugadores: cada estudiante crea su propio registro con 0 puntos.
+      // Solo el profesor escribe puntajes y resultados.
+      match /players/{uid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['nick', 'score', 'joinedAt'])
+          && request.resource.data.score == 0
+          && request.resource.data.nick is string
+          && request.resource.data.nick.size() > 0 && request.resource.data.nick.size() <= 20;
+        allow update: if isHost()
+          || (request.auth.uid == uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nick']));
+        allow delete: if isHost();
+      }
+
+      // Respuestas: privadas (solo el estudiante y el profesor las leen) y
+      // solo se aceptan mientras la pregunta está abierta.
+      match /answers/{uid} {
+        allow read: if isHost() || (signedIn() && request.auth.uid == uid);
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && get(/databases/$(database)/documents/rooms/$(pin)).data.status == 'question';
+        allow delete: if isHost();
+      }
+    }
+  }
+}

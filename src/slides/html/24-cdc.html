@@ -1,0 +1,32 @@
+<section id="cdc" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">02 · Captura de datos modificados · CDC</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">La base de datos ya lleva un diario</h2>
+<x-embed style="position:absolute;left:128px;top:310px;width:1664px;height:330px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.b{position:absolute;top:60px;height:150px;border-radius:18px;background:#141A22;border:3px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;font-weight:700;text-align:center}
+.b small{font:400 24px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.ln{position:absolute;top:133px;height:4px;background:#2B3647}
+.e{position:absolute;top:120px;width:120px;height:30px;border-radius:8px;font:700 24px ui-monospace,Menlo,Consolas,monospace;color:#0B0E13;display:flex;align-items:center;justify-content:center;opacity:0}
+.cap{position:absolute;left:0;top:260px;width:1664px;text-align:center;font-size:28px;color:#A7B0BE}
+</style></head><body>
+<div class="b" style="left:0;width:300px">App legada<small>UPDATE lotes</small></div><div class="ln" style="left:300px;width:90px"></div>
+<div class="b" style="left:390px;width:300px;border-color:#6EA8FF">Log de la BD<small>binlog · WAL</small></div><div class="ln" style="left:690px;width:90px"></div>
+<div class="b" style="left:780px;width:300px;border-color:#B78CFF">Conector CDC<small>Debezium</small></div><div class="ln" style="left:1080px;width:90px"></div>
+<div class="b" style="left:1170px;width:220px;border-color:#C6F33A">Kafka<small>topic</small></div><div class="ln" style="left:1390px;width:54px"></div>
+<div class="b" style="left:1444px;width:220px">Consumidores<small>analítica</small></div>
+<div class="cap" id="cap">INSERT / UPDATE / DELETE → evento estructurado, sin tocar el código de la app</div>
+<script>
+const C=[['INS','#C6F33A'],['UPD','#6EA8FF'],['UPD','#6EA8FF'],['DEL','#FF8A3D']];let k=0;
+function shot(){const [t,c]=C[k++%4];const e=document.createElement('div');e.className='e';e.textContent=t;e.style.background=c;document.body.appendChild(e);
+ const a=e.animate([{left:'90px',opacity:0},{left:'200px',opacity:1,offset:.08},{left:'480px',offset:.3},{left:'870px',offset:.55},{left:'1220px',offset:.8},{left:'1500px',opacity:1,offset:.97},{left:'1510px',opacity:0}],{duration:4200,easing:'linear'});
+ a.finished.then(()=>e.remove())}
+shot();setInterval(shot,900);
+</script></body></html></x-embed>
+<div style="position:absolute;left:128px;top:660px;width:1664px;display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;background:#141A22;border-radius:18px;padding:24px 28px;display:flex;flex-direction:column;gap:8px"><h3 style="font-size:30px;font-weight:700;color:#C6F33A">No intrusivo</h3><p style="font-size:24px;line-height:1.35;color:#A7B0BE">Integra sistemas que no emiten eventos (IAM, facturación).</p></div>
+<div style="flex:1;background:#141A22;border-radius:18px;padding:24px 28px;display:flex;flex-direction:column;gap:8px"><h3 style="font-size:30px;font-weight:700;color:#6EA8FF">A gran escala</h3><p style="font-size:24px;line-height:1.35;color:#A7B0BE">Dora (2022): latencia mediana bajo 1 s y más de 2.5 M cambios/s.</p></div>
+<div style="flex:1;background:#141A22;border-radius:18px;padding:24px 28px;display:flex;flex-direction:column;gap:8px"><h3 style="font-size:30px;font-weight:700;color:#FF8A3D">Cuidado</h3><p style="font-size:24px;line-height:1.35;color:#A7B0BE">Carga extra en la BD y eventos “de fila”, no de negocio.</p></div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5 (Flujo del patrón CDC) · Dora (2022), CDC Oracle-to-Cloud en retail, JISEM 7(4)</p>
+
+</section>

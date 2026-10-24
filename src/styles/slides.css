@@ -1,0 +1,21 @@
+/* Escenario de diapositivas: lienzo fijo 1920×1080 escalado al contenedor. */
+.stage-box { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.stage-canvas { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+.slide-holder { width: 1920px; height: 1080px; }
+
+/* Reproduce los valores por defecto del formato de diapositivas */
+.slide-holder section { position: relative; width: 1920px; height: 1080px; overflow: hidden; box-sizing: border-box; }
+.slide-holder section * { box-sizing: border-box; margin: 0; }
+.slide-holder div:not([style*="display"]) { display: flex; flex-direction: column; }
+.slide-holder h1 { font-size: 96px; font-weight: 600; line-height: 1.1; }
+.slide-holder h2 { font-size: 64px; font-weight: 600; line-height: 1.15; }
+.slide-holder h3 { font-size: 44px; font-weight: 600; line-height: 1.2; }
+.slide-holder p, .slide-holder li { font-size: 32px; line-height: 1.4; }
+.slide-holder ul, .slide-holder ol { padding-left: 1.2em; }
+.slide-holder table { border-collapse: collapse; }
+.slide-holder th, .slide-holder td { padding: 0.35em 0.6em; border-bottom: 1px solid rgba(128, 128, 128, 0.35); text-align: left; vertical-align: top; }
+.slide-holder th { font-weight: 700; }
+.slide-holder x-icon, .slide-holder x-shape, .slide-holder x-embed { display: block; flex: none; }
+.slide-holder x-icon svg { width: 100%; height: 100%; display: block; }
+.slide-holder x-connector { display: contents; }
+.slide-holder x-embed { overflow: hidden; }

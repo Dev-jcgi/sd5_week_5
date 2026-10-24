@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "StorageConnection": "UseDevelopmentStorage=true",
+
+    "CosmosDBConnection": "",
+    "ServiceBusConnection": ""
+  },
+  "Host": { "CORS": "*" }
+}

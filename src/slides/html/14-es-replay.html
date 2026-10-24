@@ -1,0 +1,39 @@
+<section id="es-replay" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">01 · Event Sourcing · Replay y snapshots</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">Reconstruir es reproducir; un snapshot acorta el camino</h2>
+<x-embed style="position:absolute;left:128px;top:360px;width:1664px;height:560px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-monospace,Menlo,Consolas,monospace;color:#EEF0E8;overflow:hidden}
+.e{position:absolute;top:40px;width:180px;height:84px;border-radius:14px;background:#141A22;border:2px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px}
+.e small{color:#8A93A3;font-size:24px}
+.snap{position:absolute;top:10px;width:16px;height:144px;border-radius:8px;background:#B78CFF;box-shadow:0 0 30px #B78CFF;left:813px;opacity:0}
+.sl{position:absolute;top:150px;left:700px;width:240px;text-align:center;color:#B78CFF;font-size:24px;opacity:0}
+.lane{position:absolute;left:0;width:1664px;height:120px;border-radius:18px;background:#10151C;border:2px solid #1E2733}
+.lb{position:absolute;left:24px;font-size:24px;color:#A7B0BE}
+.cur{position:absolute;width:34px;height:34px;border-radius:50%;margin-left:-17px}
+.cnt{position:absolute;right:24px;font-size:30px;font-weight:700}
+</style></head><body>
+<div id="row"></div><div class="snap" id="snap"></div><div class="sl" id="sl">snapshot v4</div>
+<div class="lane" style="top:230px"></div><div class="lb" style="top:246px">Replay desde cero</div><div class="cur" id="c1" style="top:290px;left:90px;background:#FF8A3D;box-shadow:0 0 20px #FF8A3D"></div><div class="cnt" id="n1" style="top:280px;color:#FF8A3D">0 eventos</div>
+<div class="lane" style="top:380px"></div><div class="lb" style="top:396px">Replay desde snapshot</div><div class="cur" id="c2" style="top:440px;left:821px;background:#C6F33A;box-shadow:0 0 20px #C6F33A;opacity:0"></div><div class="cnt" id="n2" style="top:430px;color:#C6F33A">0 eventos</div>
+<script>
+const T=['LoteCreado','Créditos','Procesada','Fallida','Procesada','Procesada','Fallida','Completado'];
+const row=document.getElementById('row');const xs=[];
+T.forEach((t,i)=>{const d=document.createElement('div');d.className='e';const x=i*208;xs.push(x+90);d.style.left=x+'px';d.innerHTML='<small>v'+(i+1)+'</small>'+t;row.appendChild(d)});
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function run(){for(;;){
+ $('n1').textContent='0 eventos';$('n2').textContent='0 eventos';$('c1').style.left='90px';$('c2').style.opacity=0;$('snap').style.opacity=0;$('sl').style.opacity=0;
+ await sleep(700);
+ $('snap').animate([{opacity:0,transform:'scaleY(.2)'},{opacity:1,transform:'none'}],{duration:500,fill:'forwards'});$('sl').animate([{opacity:0},{opacity:1}],{duration:500,fill:'forwards'});
+ await sleep(900);$('c2').style.left='821px';$('c2').animate([{opacity:0},{opacity:1}],{duration:300,fill:'forwards'});
+ let a=0,b=0;
+ const r1=(async()=>{for(let i=0;i<8;i++){await $('c1').animate([{left:xs[i]+'px'}],{duration:520,fill:'forwards',easing:'ease-in-out'}).finished;$('c1').style.left=xs[i]+'px';a++;$('n1').textContent=a+' eventos';row.children[i].animate([{borderColor:'#FF8A3D'},{borderColor:'#2B3647'}],{duration:600})}})();
+ const r2=(async()=>{for(let i=4;i<8;i++){await $('c2').animate([{left:xs[i]+'px'}],{duration:520,fill:'forwards',easing:'ease-in-out'}).finished;$('c2').style.left=xs[i]+'px';b++;$('n2').textContent=b+' eventos ✓';row.children[i].animate([{background:'#1E2A12'},{background:'#141A22'}],{duration:600})}})();
+ await Promise.all([r1,r2]);
+ $('n1').textContent='8 eventos ✓';
+ await sleep(3000);
+}}
+run();
+</script></body></html></x-embed>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Mismo estado final, la mitad de trabajo · Fuente: SD5 – Semana 5 (Snapshots para restauraciones rápidas)</p>
+
+</section>

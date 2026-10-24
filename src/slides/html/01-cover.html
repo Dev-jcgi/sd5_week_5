@@ -1,0 +1,54 @@
+<section id="cover" data-transition="fade" style="background:radial-gradient(circle at 75% 45%, #1B2433 0%, #0B0E13 60%);color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:32px">
+<x-embed style="position:absolute;left:1010px;top:120px;width:782px;height:840px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-monospace,Menlo,Consolas,monospace;color:#EEF0E8;overflow:hidden}
+.log{position:absolute;left:0;top:20px;width:400px}
+.ev{position:absolute;left:0;width:380px;height:62px;border-radius:14px;background:#141A22;border:2px solid #2B3647;display:flex;align-items:center;gap:14px;padding:0 16px;box-sizing:border-box;font-size:24px;opacity:0}
+.ev b{color:#8A93A3;font-weight:400;width:44px}
+.beam{position:absolute;left:-10px;width:400px;height:70px;border-radius:16px;border:3px solid #C6F33A;box-shadow:0 0 40px rgba(198,243,58,.45);opacity:0}
+.st{position:absolute;left:460px;top:150px;width:310px;border-radius:22px;background:#141A22;border:2px solid #6EA8FF;padding:22px;box-sizing:border-box}
+.st h4{margin:0 0 12px;font-size:24px;color:#6EA8FF;letter-spacing:2px}
+.row{display:flex;justify-content:space-between;font-size:26px;margin:10px 0}
+.row span{color:#A7B0BE}.row b{color:#C6F33A;font-size:30px}
+.lk{position:absolute;left:400px;top:0;width:60px;height:840px}
+.cap{position:absolute;left:460px;top:560px;width:310px;font-size:24px;color:#A7B0BE;line-height:1.4}
+</style></head><body>
+<div class="log" id="log"></div><div class="beam" id="beam"></div>
+<div class="st"><h4>ESTADO DEL LOTE</h4>
+<div class="row"><span>estado</span><b id="e">—</b></div>
+<div class="row"><span>procesadas</span><b id="p">0</b></div>
+<div class="row"><span>fallidas</span><b id="f">0</b></div>
+<div class="row"><span>versión</span><b id="v">v0</b></div></div>
+<div class="cap" id="cap">El estado no se guarda:<br>se reproduce desde los eventos.</div>
+<script>
+const EV=[['LoteCreado','creado',0,0],['CreditosReservados','creado',0,0],['ImagenProcesada','procesando',1,0],['ImagenFallida','procesando',1,1],['ImagenProcesada','procesando',2,1],['LoteCompletado','completado',2,1]];
+const log=document.getElementById('log'),beam=document.getElementById('beam');
+const els=EV.map((x,i)=>{const d=document.createElement('div');d.className='ev';d.style.top=(i*84)+'px';d.innerHTML='<b>v'+(i+1)+'</b>'+x[0];log.appendChild(d);return d});
+const set=(id,t)=>{const el=document.getElementById(id);el.textContent=t;el.animate([{transform:'scale(1.35)',color:'#FF8A3D'},{transform:'none'}],{duration:450,easing:'ease-out'})};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function loop(){
+ for(;;){
+  set('e','—');set('p','0');set('f','0');set('v','v0');
+  for(const [i,d] of els.entries()){d.animate([{opacity:0,transform:'translateX(-40px)'},{opacity:1,transform:'none'}],{duration:420,delay:0,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'});await sleep(260)}
+  await sleep(600);
+  beam.style.opacity=1;
+  for(const [i,x] of EV.entries()){
+   await beam.animate([{top:(i*84+20-4)+'px'}],{duration:i?380:1,fill:'forwards',easing:'ease-in-out'}).finished;
+   els[i].animate([{borderColor:'#C6F33A',background:'#1E2A12'},{borderColor:'#2B3647',background:'#141A22'}],{duration:900});
+   set('e',x[1]);set('p',x[2]);set('f',x[3]);set('v','v'+(i+1));
+   await sleep(420);
+  }
+  await sleep(1400);
+  beam.style.opacity=0;
+  await Promise.all(els.map(d=>d.animate([{opacity:1},{opacity:0}],{duration:500,fill:'forwards'}).finished));
+  await sleep(300);
+ }
+}
+loop();
+</script></body></html></x-embed>
+<p data-build-in="rise 1 auto" style="position:absolute;left:128px;top:200px;width:820px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">Desarrollo de Software 5 · Semana 5</p>
+<h1 data-build-in="rise 2 auto" style="position:absolute;left:128px;top:270px;width:840px;font-size:120px;font-weight:700;line-height:1;letter-spacing:-4px">Arquitectura Basada en Eventos 2</h1>
+<p data-build-in="rise 3 auto" style="position:absolute;left:128px;top:680px;width:820px;font-size:32px;line-height:1.4;color:#A7B0BE">Event Sourcing · Outbox, CDC y SAGA · Coordinación · Latencia · Compensaciones C/A/E</p>
+<p data-build-in="fade 4 auto" style="position:absolute;left:128px;top:830px;width:820px;font-size:24px;line-height:1.5;color:#A7B0BE;font-style:italic;border-left:4px solid #FF8A3D;padding:0 0 0 20px">“One of the longest running ways to think about an enterprise application is as a system that reacts to events from the outside world.” — Martin Fowler</p>
+<p style="position:absolute;left:128px;bottom:48px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Universidad Jala · 2026 · Material de uso académico</p>
+
+</section>

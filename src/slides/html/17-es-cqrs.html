@@ -1,0 +1,40 @@
+<section id="es-cqrs" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">01 · Event Sourcing + CQRS · Adelanto de la semana 6</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">Escribir eventos, leer proyecciones</h2>
+<x-embed style="position:absolute;left:128px;top:330px;width:1664px;height:470px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.b{position:absolute;border-radius:18px;background:#141A22;border:3px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;font-weight:700;text-align:center}
+.b small{font:400 24px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.log{position:absolute;left:560px;top:150px;width:420px;height:150px;border-radius:18px;border:3px solid #C6F33A;background:#141A22;overflow:hidden}
+.lt{position:absolute;left:16px;top:10px;font:700 24px ui-monospace,Menlo,Consolas,monospace;color:#C6F33A}
+.chip{position:absolute;top:60px;width:70px;height:60px;border-radius:10px;background:#C6F33A}
+.d{position:absolute;width:20px;height:20px;border-radius:50%;margin:-10px 0 0 -10px}
+svg{position:absolute;left:0;top:0}
+</style></head><body>
+<svg width="1664" height="470"><g stroke="#2B3647" stroke-width="4" fill="none"><path d="M300 225H560"/><path d="M980 225C1080 225 1080 80 1180 80"/><path d="M980 225H1180"/><path d="M980 225C1080 225 1080 370 1180 370"/></g></svg>
+<div class="b" style="left:0;top:150px;width:300px;height:150px;border-color:#FF8A3D">Comandos<small>escritura</small></div>
+<div class="log"><div class="lt">event store</div><div id="strip"></div></div>
+<div class="b" style="left:1180px;top:30px;width:484px;height:100px;border-color:#6EA8FF">Galería del usuario<small>lista de lotes</small></div>
+<div class="b" style="left:1180px;top:175px;width:484px;height:100px;border-color:#6EA8FF">Panel de créditos<small>saldo por usuario</small></div>
+<div class="b" style="left:1180px;top:320px;width:484px;height:100px;border-color:#6EA8FF">Auditoría<small>historial completo</small></div>
+<script>
+const strip=document.getElementById('strip');const C=['#C6F33A','#6EA8FF','#FF8A3D','#B78CFF'];let k=0;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function dot(path,color){const d=document.createElement('div');d.className='d';d.style.background=color;d.style.boxShadow='0 0 16px '+color;document.body.appendChild(d);
+ const a=d.animate(path.map(([x,y])=>({left:x+'px',top:y+'px'})),{duration:1100,easing:'ease-in-out',fill:'forwards'});a.finished.then(()=>d.remove());return a}
+async function go(){for(;;){
+ const c=C[k++%4];
+ await dot([[300,225],[560,225]],'#FF8A3D').finished;
+ const ch=document.createElement('div');ch.className='chip';ch.style.background=c;ch.style.left='420px';strip.appendChild(ch);
+ [...strip.children].forEach((e,i,arr)=>e.style.left=(330-(arr.length-1-i)*84)+'px');
+ if(strip.children.length>5)strip.firstChild.remove();
+ await sleep(300);
+ dot([[980,225],[1080,180],[1180,80]],c);dot([[980,225],[1180,225]],c);dot([[980,225],[1080,270],[1180,370]],c);
+ await sleep(1500);
+}}
+go();
+</script></body></html></x-embed>
+<p style="position:absolute;left:128px;top:830px;width:1664px;font-size:28px;line-height:1.4">Cada vista de lectura es una proyección: se puede borrar y reconstruir reproduciendo el log.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5 (CQRS y Event Sourcing) · Zhao et al. (2025), pagos en tiempo real con CQRS + ES</p>
+
+</section>

@@ -1,0 +1,25 @@
+<section id="es-idea" data-transition="push" style="background:#F2F1EA;color:#10141A;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:30px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C2410C;text-transform:uppercase">01 · Event Sourcing · La idea</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">El log manda; el estado se deriva</h2>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;background:#FBFBF8;border-radius:20px;padding:30px;display:flex;flex-direction:column;gap:14px">
+<h3 style="font-size:34px;font-weight:700;color:#5B6372">CRUD clásico</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;background:#E7E5DC;padding:14px 18px;border-radius:12px">lote_481 · completado · 2 ok · 1 error</p>
+<p style="font-size:26px;line-height:1.4;color:#4A5363">Cada UPDATE borra el valor anterior. Sabemos cómo quedó, no cómo llegó ahí.</p>
+</div>
+<div style="flex:1;background:#10141A;color:#EEF0E8;border-radius:20px;padding:30px;display:flex;flex-direction:column;gap:10px">
+<h3 style="font-size:34px;font-weight:700;color:#C6F33A">Event Sourcing</h3>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A7B0BE">v1 LoteCreado · v2 CreditosReservados</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A7B0BE">v3 ImagenProcesada · v4 ImagenFallida</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A7B0BE">v5 ImagenProcesada · v6 LoteCompletado</p>
+<p style="font-size:26px;line-height:1.4">Solo se agregan eventos (append-only). El estado = aplicarlos en orden.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:20px">
+<p style="flex:1;font-size:26px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 22px;border-radius:12px"><b>Auditoría:</b> quién, qué y cuándo, gratis.</p>
+<p style="flex:1;font-size:26px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 22px;border-radius:12px"><b>Viaje en el tiempo:</b> el estado en cualquier versión.</p>
+<p style="flex:1;font-size:26px;line-height:1.4;background:#FBFBF8;border-left:6px solid #C2410C;padding:16px 22px;border-radius:12px"><b>Reprocesar:</b> corregir un bug y volver a calcular.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5B6372">Fuentes: SD5 – Semana 5 (CQRS y Event Sourcing) · Beber (2025): “como el saldo de tu cuenta es la suma de tus transacciones”, igual que git</p>
+
+</section>

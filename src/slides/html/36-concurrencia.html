@@ -1,0 +1,21 @@
+<section id="concurrencia" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">03 · Concurrencia en servicios distribuidos</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">¿Bloquear o detectar el conflicto?</h2>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="flex:1;background:#141A22;border-top:6px solid #FF8A3D;border-radius:20px;padding:30px;display:flex;flex-direction:column;gap:12px">
+<h3 style="font-size:36px;font-weight:700">Pesimista</h3>
+<p style="font-size:26px;line-height:1.4;color:#A7B0BE">Bloquea el recurso: nadie más lo toca hasta que termines.</p>
+<p style="font-size:26px;line-height:1.4">Más consistencia, menos concurrencia.</p>
+<p style="font-size:24px;line-height:1.4;color:#FF8A3D">PixPro: descontar créditos del saldo.</p>
+</div>
+<div style="flex:1;background:#141A22;border-top:6px solid #C6F33A;border-radius:20px;padding:30px;display:flex;flex-direction:column;gap:12px">
+<h3 style="font-size:36px;font-weight:700">Optimista</h3>
+<p style="font-size:26px;line-height:1.4;color:#A7B0BE">Todos leen y escriben; al confirmar se valida la versión.</p>
+<p style="font-size:26px;line-height:1.4">Más concurrencia, hay que manejar conflictos.</p>
+<p style="font-size:24px;line-height:1.4;color:#C6F33A">PixPro: renombrar un proyecto (ETag / versión).</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4">Monolito: una base de datos coordina. Microservicios: cada servicio tiene sus datos y la coordinación viaja en eventos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5 (Concurrencia en monolitos vs microservicios; Pesimista vs optimista)</p>
+
+</section>

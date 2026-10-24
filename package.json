@@ -1,0 +1,28 @@
+{
+  "name": "pixpro-arena-semana5",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "DS5 Semana 5 · Arquitectura Basada en Eventos 2: presentación sincronizada, quiz en vivo (PixPro Arena), diagramas interactivos y laboratorio en Azure",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "encrypt": "node scripts/encrypt-answers.mjs",
+    "sync-slides": "node scripts/sync-slides.mjs"
+  },
+  "dependencies": {
+    "@joint/core": "^4.3.3",
+    "animejs": "^4.4.1",
+    "canvas-confetti": "1.9.3",
+    "firebase": "10.14.1",
+    "gsap": "3.12.5",
+    "qrcode": "^1.5.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.3",
+    "vite": "5.4.10"
+  }
+}

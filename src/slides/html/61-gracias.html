@@ -1,0 +1,27 @@
+<section id="gracias" data-transition="fade" style="background:radial-gradient(circle at 25% 50%, #1B2433 0%, #0B0E13 60%);color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:32px">
+<x-embed style="position:absolute;left:1060px;top:180px;width:732px;height:720px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;overflow:hidden;font-family:ui-monospace,Menlo,Consolas,monospace}
+.p{position:absolute;bottom:120px;width:180px;border-radius:16px 16px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:16px;box-sizing:border-box;font-size:56px;font-weight:700;color:#0B0E13;height:0}
+.c{position:absolute;width:14px;height:22px;border-radius:3px;opacity:0}
+.base{position:absolute;left:40px;bottom:100px;width:652px;height:20px;border-radius:10px;background:#2B3647}
+</style></head><body>
+<div class="base"></div>
+<div class="p" id="p2" style="left:86px;background:#6EA8FF">2</div><div class="p" id="p1" style="left:276px;background:#C6F33A">1</div><div class="p" id="p3" style="left:466px;background:#FF8A3D">3</div>
+<script>
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)),C=['#C6F33A','#6EA8FF','#FF8A3D','#B78CFF','#7FE3C4'];
+async function go(){for(;;){
+ [['p2',240],['p1',340],['p3',180]].forEach(([id,h],i)=>{const e=document.getElementById(id);e.getAnimations().forEach(a=>a.cancel());e.animate([{height:'0px'},{height:h+'px'}],{duration:900,delay:i*350,fill:'forwards',easing:'cubic-bezier(.3,1.4,.5,1)'})});
+ await sleep(1500);
+ for(let i=0;i<60;i++){const c=document.createElement('div');c.className='c';c.style.background=C[i%5];c.style.left=(200+Math.random()*330)+'px';c.style.top='150px';document.body.appendChild(c);
+  const dx=(Math.random()-.5)*700,dy=-200-Math.random()*200;
+  c.animate([{opacity:1,transform:'translate(0,0) rotate(0)'},{opacity:1,transform:'translate('+dx*.6+'px,'+dy+'px) rotate(300deg)',offset:.4},{opacity:0,transform:'translate('+dx+'px,'+(dy+700)+'px) rotate(720deg)'}],{duration:2600+Math.random()*900,easing:'cubic-bezier(.2,.6,.4,1)'}).finished.then(()=>c.remove())}
+ await sleep(5200);
+}}
+go();
+</script></body></html></x-embed>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:28px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase;width:880px">event: ClassCompleted · v2</p>
+<h1 style="font-size:120px;font-weight:700;line-height:1;letter-spacing:-4px;width:900px">Gracias. ¿Preguntas?</h1>
+<p style="font-size:34px;line-height:1.4;width:880px;color:#A7B0BE">Ahora sí: el ranking final y el podio de la Arena. Nos vemos en CQRS.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Universidad Jala · 2026 · Material de uso académico</p>
+
+</section>

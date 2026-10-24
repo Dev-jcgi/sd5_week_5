@@ -1,0 +1,48 @@
+<section id="dualwrite" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">02 · El problema · Dual write</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.05;letter-spacing:-2px">Dos escrituras, ninguna transacción</h2>
+<x-embed style="position:absolute;left:128px;top:320px;width:1664px;height:480px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.b{position:absolute;border-radius:18px;background:#141A22;border:3px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.b small{font:400 24px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.ln{position:absolute;height:4px;background:#2B3647}
+.tk{position:absolute;width:30px;height:30px;border-radius:8px;margin:-15px 0 0 -15px;opacity:0}
+.x{position:absolute;left:1080px;top:110px;font:700 120px ui-sans-serif,system-ui;color:#FF6B8B;opacity:0}
+.cap{position:absolute;left:0;top:400px;width:1664px;text-align:center;font-size:30px}
+.st{position:absolute;font:700 24px ui-monospace,Menlo,Consolas,monospace;padding:6px 14px;border-radius:999px;opacity:0}
+</style></head><body>
+<div class="b" style="left:0;top:100px;width:300px;height:150px">API<small>POST /batches</small></div>
+<div class="ln" style="left:300px;top:175px;width:260px"></div>
+<div class="b" id="db" style="left:560px;top:30px;width:340px;height:120px;border-color:#6EA8FF">Base de datos<small>lotes</small></div>
+<div class="b" id="br" style="left:1280px;top:100px;width:384px;height:150px">Broker<small>BatchQueued</small></div>
+<div class="ln" style="left:900px;top:175px;width:380px"></div>
+<div class="st" id="s1" style="left:600px;top:170px;background:#C6F33A;color:#0B0E13">✓ COMMIT</div>
+<div class="x" id="x">✕</div>
+<div class="tk" id="t1" style="background:#6EA8FF"></div><div class="tk" id="t2" style="background:#FF8A3D"></div>
+<div class="cap" id="cap"></div>
+<script>
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const say=t=>{$('cap').textContent=t;$('cap').animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+async function go(){for(;;){
+ ['s1','x','t1','t2'].forEach(i=>$(i).style.opacity=0);$('br').style.borderColor='#2B3647';$('br').style.opacity=1;
+ say('1 · La API guarda el lote en su base de datos…');
+ $('t1').style.opacity=1;await $('t1').animate([{left:'300px',top:'175px'},{left:'560px',top:'175px'},{left:'730px',top:'90px'}],{duration:1200,fill:'forwards',easing:'ease-in-out'}).finished;
+ $('s1').animate([{opacity:0,transform:'scale(.6)'},{opacity:1,transform:'none'}],{duration:400,fill:'forwards'});$('t1').style.opacity=0;
+ await sleep(900);
+ say('2 · …y luego intenta publicar el evento…');
+ $('t2').style.opacity=1;const a=$('t2').animate([{left:'730px',top:'175px'},{left:'1080px',top:'175px'}],{duration:1100,fill:'forwards',easing:'ease-in'});
+ await sleep(700);$('br').animate([{opacity:1},{opacity:.25}],{duration:300,fill:'forwards'});$('br').style.borderColor='#FF6B8B';
+ await a.finished;$('t2').animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(160px) rotate(90deg)'}],{duration:700,fill:'forwards',easing:'ease-in'});
+ $('x').animate([{opacity:0,transform:'scale(2)'},{opacity:1,transform:'none'}],{duration:400,fill:'forwards'});
+ say('3 · El broker cayó: el lote existe, pero nadie se enteró. Estado inconsistente.');
+ await sleep(3800);
+}}
+go();
+</script></body></html></x-embed>
+<div style="position:absolute;left:128px;top:820px;width:1664px;display:flex;flex-direction:row;gap:20px">
+<p style="flex:1;font-size:26px;line-height:1.35;color:#A7B0BE">¿Publicar primero? Si la BD falla, el evento anuncia algo que no existe.</p>
+<p style="flex:1;font-size:26px;line-height:1.35;color:#A7B0BE">¿2PC entre BD y broker? Casi ningún broker lo soporta y bloquea a todos.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: microservices.io, Transactional Outbox (“Problem”, “Forces”) · SD5 – Semana 5</p>
+
+</section>

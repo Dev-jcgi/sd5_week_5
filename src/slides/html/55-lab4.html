@@ -1,0 +1,27 @@
+<section id="lab4" data-transition="push" style="background:#0F1A2E;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:row;gap:16px;align-items:center">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:700;background:#6EA8FF;color:#0B1530;padding:8px 20px;border-radius:999px">LAB AZURE · DEMO 4</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A7B0BE">Service Bus Basic (maxDeliveryCount = 3)</p>
+</div>
+<h2 style="font-size:64px;font-weight:700;line-height:1.05;letter-spacing:-2px">La IA se cae; PixPro sigue de pie</h2>
+<div style="display:flex;flex-direction:row;gap:28px">
+<div style="width:680px;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:28px;line-height:1.35"><b style="color:#6EA8FF">1</b> · IA intermitente → reintentos con espera creciente</p>
+<p style="font-size:28px;line-height:1.35"><b style="color:#FF8A3D">2</b> · IA caída → el circuito se ABRE y responde al instante</p>
+<p style="font-size:28px;line-height:1.35"><b style="color:#FF6B8B">3</b> · Mensaje veneno → 3 entregas fallidas → DLQ</p>
+<p style="font-size:28px;line-height:1.35"><b style="color:#C6F33A">4</b> · Ver DLQ → corregir y reprocesar</p>
+</div>
+<div style="flex:1;background:#0B0E13;border:2px solid #2B3647;border-radius:18px;padding:24px 28px;display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.45">
+<p style="color:#8A93A3">// resiliencia.js</p>
+<p><span style="color:#B78CFF">await</span> <span style="color:#C6F33A">reintentar</span>(</p>
+<p>&#160;&#160;() =&gt; breaker.<span style="color:#C6F33A">ejecutar</span>(iaExterna),</p>
+<p>&#160;&#160;{ intentos: 4, baseMs: 250 }); <span style="color:#8A93A3">// + jitter</span></p>
+<p style="color:#8A93A3">// digester: lanzar error = abandonar</p>
+<p><span style="color:#B78CFF">if</span> (trabajo.veneno) <span style="color:#B78CFF">throw new</span> Error(…);</p>
+<p style="color:#8A93A3">// Service Bus lo mueve solo a la DLQ</p>
+<p>createReceiver(cola, { subQueueType: <span style="color:#FF8A3D">'deadLetter'</span> })</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">azure-lab/src/functions/04-resiliencia.js · reintentos y circuit breaker corren sin Azure; la DLQ necesita Service Bus</p>
+
+</section>

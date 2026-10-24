@@ -1,0 +1,104 @@
+{
+  "title": "DS5 · Semana 5 · Arquitectura Basada en Eventos 2",
+  "order": [
+    "cover",
+    "agenda",
+    "curso",
+    "arena",
+    "g1a",
+    "checkpoint",
+    "pixpro",
+    "g1b",
+    "puente",
+    "peligros",
+    "g2a",
+    "d1",
+    "es-idea",
+    "es-replay",
+    "es-store",
+    "es-reparar",
+    "es-cqrs",
+    "lab1",
+    "g2b",
+    "g3a",
+    "d2",
+    "dualwrite",
+    "outbox",
+    "cdc",
+    "ocdc",
+    "saga",
+    "saga-anim",
+    "saga-tech",
+    "ftth",
+    "lab2",
+    "g3b",
+    "g4a",
+    "d3",
+    "orq-coreo",
+    "orq-tabla",
+    "concurrencia",
+    "fuera-orden",
+    "lab3",
+    "g4b",
+    "g5a",
+    "d4",
+    "latencia",
+    "tecnicas",
+    "esquemas",
+    "particiones",
+    "lab5",
+    "g5b",
+    "g6a",
+    "d5",
+    "cap",
+    "modelos",
+    "entrega",
+    "resiliencia",
+    "matriz",
+    "lab4",
+    "g6b",
+    "actividad1",
+    "tarea54",
+    "resumen",
+    "fuentes",
+    "gracias"
+  ],
+  "sections": [
+    {
+      "title": "Apertura: portada, agenda, estructura del curso y reglas de la Arena PixPro",
+      "start": "cover"
+    },
+    {
+      "title": "Capstone checkpoint: estado de PixPro y qué gana hoy con EDA 2",
+      "start": "g1a"
+    },
+    {
+      "title": "Puente desde EDA 1: servicios dirigidos por eventos y peligros comunes",
+      "start": "puente"
+    },
+    {
+      "title": "Almacenar y reproducir eventos: Event Sourcing, snapshots, reparación de estado y CQRS",
+      "start": "g2a"
+    },
+    {
+      "title": "Bandeja de salida, CDC y patrón SAGA",
+      "start": "g3a"
+    },
+    {
+      "title": "Coordinación de componentes: orquestación, coreografía y concurrencia",
+      "start": "g4a"
+    },
+    {
+      "title": "Optimización del flujo de eventos y reducción de la latencia",
+      "start": "g5a"
+    },
+    {
+      "title": "Compensaciones entre consistencia, disponibilidad y escalabilidad",
+      "start": "g6a"
+    },
+    {
+      "title": "Cierre: actividades de la semana, resumen y fuentes",
+      "start": "actividad1"
+    }
+  ]
+}

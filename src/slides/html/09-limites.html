@@ -1,0 +1,26 @@
+<section id="limites" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">Repaso · Organizar límites (DDD)</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Cada servicio con su contexto y su dueño</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:540px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><svg width="1664" height="470"><g stroke="#2B3647" stroke-width="4" fill="none"><path d="M632 230L400 105"/><path d="M1032 230L1264 105"/><path d="M1032 280L1264 405"/><path d="M400 405L632 280"/></g></svg><div id="w"></div><div class="cap" id="cap" style="top:490px"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const C=[['lot','Lotes','equipo API · cambia seguido',632,190,'#C6F33A'],['cre','Créditos','equipo pagos · datos transaccionales',0,40,'#6EA8FF'],['ia','Procesamiento IA','equipo IA · cambia muy seguido',1264,40,'#FF8A3D'],['not','Notificaciones','WebSocket · tolera retrasos',1264,340,'#7FE3C4'],['iam','Identidad','IAM externo · no lo controlamos',0,340,'#B78CFF']];
+const box={};C.forEach(([id,t,s,x,y,c])=>{box[id]=mk('n o0',t+'<small>'+s+'</small>',{left:px(x),top:px(y),width:'400px',height:'130px',borderStyle:'dashed',borderColor:c})});
+const L=[['cre',[515,165],'CreditosReservados','#6EA8FF'],['ia',[1150,165],'LoteCreado / ImagenProcesada','#FF8A3D'],['not',[1150,345],'LoteCompletado','#7FE3C4'],['iam',[515,345],'UsuarioActualizado (CDC)','#B78CFF']];
+async function go(){for(;;){reset();Object.values(box).forEach(b=>b.style.opacity=0);
+say('Cada contexto acotado tiene su modelo, sus datos y un equipo dueño');
+for(const id of ['lot','cre','ia','not','iam']){show(box[id]);await S(550)}
+say('Entre contextos solo viajan eventos: nadie lee la base de datos del otro','#C6F33A');
+for(const [id,[x,y],t,c] of L){const e=mk('chip tmp',t,{left:px(x),top:px(y),background:c,color:'#0B0E13',opacity:0,transform:'translateX(-50%)'});A(e,[{opacity:0},{opacity:1}]);await S(900)}
+say('Criterios de la guía: equipos, probabilidad de cambio y tipo de datos');await S(4500)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5, Organizando límites · EDA & DDD (Kong To, Domain-driven design: the strategic design)</p>
+
+</section>

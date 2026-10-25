@@ -4,7 +4,7 @@ Todo lo de la sesión de 100 minutos en un repositorio:
 
 | Parte | Dónde | Qué es |
 |---|---|---|
-| Presentación + Arena | `src/` (sitio en GitHub Pages) | 49 diapositivas sencillas sincronizadas con el profesor y 6 rondas con actividades tipo Mentimeter (nube de palabras, escala, pregunta abierta, 100 puntos, adivina el número, ordenar y quiz) |
+| Presentación + Arena | `src/` (sitio en GitHub Pages) | 64 diapositivas sencillas (5 opcionales) sincronizadas con el profesor y 6 rondas con actividades tipo Mentimeter (nube de palabras, escala, pregunta abierta, 100 puntos, adivina el número, ordenar y quiz) |
 | Diagramas interactivos | `#/diagramas` | Seis escenas (Event Sourcing, Outbox + CDC, SAGA, coordinación, particiones y CAP) con JointJS + anime.js |
 | Guía sin código | `guia-azure.html` | PixPro Lite paso a paso en el portal de Azure (Storage, Event Grid, Service Bus, Logic Apps) |
 | Laboratorio en Azure | [`azure-lab/`](azure-lab/README.md) | Event Sourcing, Outbox + CDC, SAGA orquestada y resiliencia con Azure Functions (Node.js) |

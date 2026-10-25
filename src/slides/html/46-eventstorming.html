@@ -1,0 +1,29 @@
+<section id="eventstorming" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">04 · Modelar eventos con Event Storming</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Descubrir los eventos en equipo, con notas</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:560px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><svg width="1664" height="60"><path d="M0 30H1640" stroke="#2B3647" stroke-width="4" marker-end="url(#ar)"/><defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2B3647"/></marker></defs></svg><div style="position:absolute;right:0;top:440px;display:flex;gap:16px;font:700 20px ui-monospace,Menlo,monospace"><span style="color:#FF8A3D">■ evento</span><span style="color:#6EA8FF">■ comando</span><span style="color:#FFD166">■ actor</span><span style="color:#B78CFF">■ política</span><span style="color:#FF6B8B">■ duda</span></div><div id="w"></div><div class="cap" id="cap" style="top:500px"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const note=(t,x,y,c,w)=>mk('tmp','<b>'+t+'</b>',{position:'absolute',left:px(x),top:px(y),width:px(w||230),minHeight:'92px',padding:'12px 14px',boxSizing:'border-box',background:c,color:'#14101F',borderRadius:'6px 6px 16px 6px',fontSize:'22px',lineHeight:'1.2',boxShadow:'0 8px 18px rgba(0,0,0,.35)',opacity:0,transform:'rotate(-1.5deg)'});
+const EV=['Lote subido','Créditos reservados','Imagen procesada','Imagen rechazada','Lote completado','Usuario notificado'];
+const CM=[[0,'Subir lote'],[1,'Reservar créditos'],[2,'Procesar imagen']];
+async function go(){for(;;){reset();
+say('1 · Identificar los eventos de dominio: notas naranjas, en pasado, en orden de tiempo','#FF8A3D');
+for(let i=0;i<EV.length;i++){show(note(EV[i],i*272,70,'#FF9F5A'),{duration:350});await S(450)}
+await S(600);say('2 · ¿Qué los provoca? Comandos (azul) y actores (amarillo)','#6EA8FF');
+show(note('Usuario',0,330,'#FFD166',180));await S(300);
+for(const [i,t] of CM){show(note(t,i*272,200,'#8CB8FF'),{duration:350});await S(450)}
+await S(500);say('3 · Reglas y dudas: políticas (morado) y puntos calientes (rosa)','#B78CFF');
+show(note('Si falla 3 veces → DLQ',816,330,'#C9A8FF',300));await S(500);show(note('¿Y si la IA tarda 30 s?',1150,330,'#FF8FA8',300));await S(1400);
+say('Resultado: los eventos, quién los produce y quién los consume, acordado entre todos');await S(4800)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5, Modelado de eventos con Event Storming (Choosing the Correct Event Schema Design, SpringerLink)</p>
+
+</section>

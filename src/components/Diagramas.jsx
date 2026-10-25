@@ -10,6 +10,7 @@ const C = { bg: '#141A22', line: '#2B3647', tx: '#EEF0E8', lime: '#C6F33A', org:
 const ESCENAS = {
   saga: {
     titulo: 'SAGA orquestada con compensaciones',
+    tab: '2 · SAGA',
     nota: 'Arrastra los nodos para reacomodar el diagrama. Elige un escenario y observa los pasos y las compensaciones.',
     nodos: [
       ['orq', 'Orquestador', 380, 20, C.blu, 220],
@@ -28,6 +29,7 @@ const ESCENAS = {
   },
   outbox: {
     titulo: 'Outbox + CDC frente al dual write',
+    tab: '2 · Outbox + CDC',
     nota: 'Compara qué pasa cuando el broker cae con y sin bandeja de salida. Luego reenvía un evento para ver la idempotencia.',
     nodos: [
       ['api', 'API', 20, 170, C.line], ['bd', 'BD · lotes', 250, 60, C.blu], ['ob', 'BD · outbox', 250, 280, C.blu],
@@ -40,6 +42,50 @@ const ESCENAS = {
       ['Reenviar (duplicado)', { modo: 'dup' }],
     ],
   },
+  es: {
+    titulo: 'Event Sourcing: guardar eventos y reproducirlos',
+    nota: 'Agrega eventos al log y luego reconstruye las vistas con un replay, desde cero o desde un snapshot.',
+    tab: '1 · Event Sourcing',
+    nodos: [
+      ['api', 'API (comandos)', 20, 180, C.line], ['log', 'Event store · lote_481', 280, 180, C.lime, 240],
+      ['snap', 'Snapshot v4', 300, 20, C.pur], ['saldo', 'Vista: saldo', 640, 80, C.blu], ['hist', 'Vista: historial', 640, 290, C.blu],
+    ],
+    links: [['api', 'log'], ['log', 'saldo'], ['log', 'hist'], ['log', 'snap', true]],
+    acciones: [['Agregar evento', { modo: 'add' }], ['Replay desde cero', { modo: 'replay' }], ['Replay desde snapshot', { modo: 'snap' }]],
+  },
+  coord: {
+    titulo: 'Orquestación frente a coreografía',
+    nota: 'El mismo flujo de PixPro coordinado por un director central o por eventos entre servicios.',
+    tab: '3 · Coordinar',
+    nodos: [
+      ['orq', 'Orquestador', 330, 10, C.blu, 220],
+      ['cre', 'Créditos', 20, 220, C.line], ['dig', 'Digester (IA)', 250, 220, C.line], ['cdn', 'CDN', 480, 220, C.line], ['not', 'Notifier', 710, 220, C.line],
+    ],
+    links: [['orq', 'cre'], ['orq', 'dig'], ['orq', 'cdn'], ['orq', 'not'], ['cre', 'dig', true], ['dig', 'cdn', true], ['cdn', 'not', true]],
+    acciones: [['Orquestación', { modo: 'orq' }], ['Coreografía', { modo: 'coreo' }], ['Coreografía: ¿quién falló?', { modo: 'coreoFalla' }]],
+  },
+  part: {
+    titulo: 'Particiones y hotspots',
+    nota: 'La clave de partición decide a qué carril va cada evento. Compara userId (una agencia sube el 40 %) contra loteId.',
+    tab: '4 · Particiones',
+    nodos: [
+      ['prod', 'Productor', 20, 200, C.line],
+      ['p0', 'Partición 0', 330, 20, C.line], ['p1', 'Partición 1', 330, 140, C.line], ['p2', 'Partición 2', 330, 260, C.line], ['p3', 'Partición 3', 330, 380, C.line],
+      ['c0', 'Consumidor 0', 640, 20, C.blu], ['c1', 'Consumidor 1', 640, 140, C.blu], ['c2', 'Consumidor 2', 640, 260, C.blu], ['c3', 'Consumidor 3', 640, 380, C.blu],
+    ],
+    links: [['prod', 'p0'], ['prod', 'p1'], ['prod', 'p2'], ['prod', 'p3'], ['p0', 'c0'], ['p1', 'c1'], ['p2', 'c2'], ['p3', 'c3']],
+    acciones: [['Clave = userId', { modo: 'user' }], ['Clave = loteId', { modo: 'lote' }]],
+  },
+  cap: {
+    titulo: 'CAP: la red se parte',
+    nota: 'Dos nodos replican la misma foto. Corta la red y elige: responder con un dato viejo (AP) o devolver un error (CP).',
+    tab: '5 · CAP',
+    nodos: [
+      ['ua', 'Usuario A', 20, 200, C.line], ['g1', 'Nodo G1 · v0', 260, 200, C.blu], ['g2', 'Nodo G2 · v0', 560, 200, C.blu], ['ub', 'Usuario B', 800, 200, C.line],
+    ],
+    links: [['ua', 'g1'], ['g1', 'g2'], ['ub', 'g2']],
+    acciones: [['Red normal', { modo: 'ok' }], ['Partición · AP', { modo: 'ap' }], ['Partición · CP', { modo: 'cp' }]],
+  },
 };
 
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -47,7 +93,7 @@ const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 export default function Diagramas() {
   const host = useRef(null);
   const ref = useRef({});
-  const [escena, setEscena] = useState('saga');
+  const [escena, setEscena] = useState(() => { const e = new URLSearchParams(location.hash.split('?')[1] || '').get('e'); return ESCENAS[e] ? e : 'es'; });
   const [log, setLog] = useState([]);
   const [ocupado, setOcupado] = useState(false);
   const say = (t, color) => setLog((l) => [{ t, color, k: Math.random() }, ...l].slice(0, 9));
@@ -87,7 +133,7 @@ export default function Diagramas() {
     const fit = () => paper.transformToFitContent({ padding: 24, maxScale: 1.25, horizontalAlign: 'middle', verticalAlign: 'middle' });
     fit();
     window.addEventListener('resize', fit);
-    ref.current = { graph, paper, nodos, links, token };
+    ref.current = { graph, paper, nodos, links, token, ev: 4 };
     // Entrada animada de los nodos (anime.js sobre los <g> del SVG).
     const vistas = Object.values(nodos).map((n) => paper.findViewByModel(n)?.el).filter(Boolean);
     animate(vistas, { opacity: [0, 1], duration: 600, delay: stagger(80), ease: 'outExpo' });
@@ -109,7 +155,8 @@ export default function Diagramas() {
   const latido = (id) => { const n = ref.current.nodos[id]; const o = { w: 3 }; animate(o, { w: [3, 10, 3], duration: 650, ease: 'outQuad', onUpdate: () => n.attr('body/strokeWidth', o.w) }); };
   const reset = () => {
     const E = ESCENAS[escena];
-    for (const [id, , , , stroke] of E.nodos) pinta(id, stroke);
+    for (const [id, label, , , stroke] of E.nodos) { pinta(id, stroke); ref.current.nodos[id].attr('label/text', label); }
+    if (escena === 'cap') { ref.current.links['g1>g2'].attr('line/stroke', C.line); ref.current.links['g1>g2'].attr('line/strokeDasharray', null); }
     for (const [a, b, comp] of E.links) if (comp) ref.current.links[`${a}>${b}`].attr('line/opacity', 0.25);
     ref.current.token.position(-100, -100);
   };
@@ -165,10 +212,73 @@ export default function Diagramas() {
     say('Mismo messageId otra vez: el Notifier lo ignora (idempotencia)', C.org);
   }
 
+
+  async function correrEs({ modo }) {
+    const R = ref.current;
+    R.ev = R.ev || 4;
+    if (modo === 'add') {
+      await recorre('api', 'log'); R.ev++; latido('log');
+      R.nodos.log.attr('label/text', `Event store · ${R.ev} eventos`); say(`Evento v${R.ev} agregado al final del log (nunca se edita)`, C.lime); return;
+    }
+    const desde = modo === 'snap' ? 4 : 0;
+    if (modo === 'snap') { await recorre('log', 'snap', C.pur); pinta('snap', C.pur); say('Se carga el snapshot de la versión 4', C.pur); }
+    for (let v = desde + 1; v <= R.ev; v++) { latido('log'); say(`Aplicando v${v}…`, C.blu); await espera(350); }
+    await Promise.all([recorre('log', 'saldo', C.blu), recorre('log', 'hist', C.blu)]);
+    pinta('saldo', C.lime); pinta('hist', C.lime); latido('saldo'); latido('hist');
+    const k = R.ev - desde;
+    say(`Vistas reconstruidas aplicando ${k} evento${k === 1 ? '' : 's'}${modo === 'snap' ? ' (en vez de ' + R.ev + ')' : ''}`, C.lime);
+  }
+  async function correrCoord({ modo }) {
+    const pasos = ['cre', 'dig', 'cdn', 'not'];
+    const nombre = { cre: 'Créditos', dig: 'Digester', cdn: 'CDN', not: 'Notifier' };
+    if (modo === 'orq') {
+      for (const p of pasos) { await recorre('orq', p, C.blu); pinta(p, C.lime); latido(p); say(`Orquestador → ${nombre[p]}: “haz tu paso”`, C.blu); }
+      say('Todo el flujo está escrito en un solo lugar: fácil de seguir', C.lime); return;
+    }
+    for (const [a, b, comp] of ESCENAS.coord.links) if (comp) ref.current.links[`${a}>${b}`].attr('line/opacity', 1);
+    pinta('cre', C.lime); latido('cre'); say('Créditos publica CreditosReservados', C.org);
+    for (let i = 0; i < 3; i++) {
+      const [a, b] = [pasos[i], pasos[i + 1]];
+      await recorre(a, b, C.org);
+      if (modo === 'coreoFalla' && b === 'cdn') { pinta('cdn', C.bad, '#3A1620'); latido('cdn'); say('El CDN falló en silencio… ¿quién se entera? Nadie tiene la vista completa', C.bad); return; }
+      pinta(b, C.lime); latido(b); say(`${nombre[b]} reaccionó al evento de ${nombre[a]}`, C.org);
+    }
+    say('Nadie dirige: cada servicio reacciona. Más desacoplado, más difícil de rastrear', C.lime);
+  }
+  async function correrPart({ modo }) {
+    const carga = [0, 0, 0, 0];
+    for (let i = 0; i < 12; i++) {
+      const p = modo === 'user' ? (i % 10 < 6 ? 1 : [0, 2, 3][i % 3]) : i % 4;
+      carga[p]++;
+      await recorre('prod', `p${p}`, modo === 'user' && p === 1 ? C.bad : C.lime, 260);
+      const caliente = carga[p] >= 5;
+      pinta(`p${p}`, caliente ? C.bad : C.lime, caliente ? '#3A1620' : C.bg);
+      ref.current.nodos[`p${p}`].attr('label/text', `Partición ${p} · ${carga[p]}`);
+    }
+    say(modo === 'user' ? `Hotspot: la partición 1 recibió ${carga[1]} de 12 eventos; su consumidor se satura` : 'loteId reparte 3 eventos por partición y cada lote conserva su orden', modo === 'user' ? C.bad : C.lime);
+    for (let p = 0; p < 4; p++) if (carga[p]) recorre(`p${p}`, `c${p}`, C.blu, 400);
+  }
+  async function correrCap({ modo }) {
+    const n = ref.current.nodos;
+    n.g1.attr('label/text', 'Nodo G1 · v0'); n.g2.attr('label/text', 'Nodo G2 · v0');
+    const red = ref.current.links['g1>g2'];
+    red.attr('line/stroke', C.line); red.attr('line/strokeDasharray', null);
+    await recorre('ua', 'g1'); n.g1.attr('label/text', 'Nodo G1 · v1'); pinta('g1', C.lime); say('A sube la foto v1 al nodo G1', C.lime);
+    if (modo === 'ok') {
+      await recorre('g1', 'g2', C.blu); n.g2.attr('label/text', 'Nodo G2 · v1'); pinta('g2', C.lime);
+      await recorre('ub', 'g2'); say('Sin partición: B lee v1. Consistente y disponible', C.lime); return;
+    }
+    red.attr('line/stroke', C.bad); red.attr('line/strokeDasharray', '4 8'); latido('g2');
+    say('✕ Se cortó la red entre G1 y G2', C.bad); await espera(900);
+    await recorre('ub', 'g2', C.blu);
+    if (modo === 'ap') { pinta('g2', C.org); latido('g2'); say('AP: G2 responde v0 (viejo). Disponible, pero inconsistente', C.org); }
+    else { pinta('g2', C.bad, '#3A1620'); latido('g2'); say('CP: G2 responde error hasta recuperar la red. Consistente, pero no disponible', C.bad); }
+  }
+
   const correr = async (opts) => {
     if (ocupado) return;
     setOcupado(true); reset(); setLog([]);
-    try { await (escena === 'saga' ? correrSaga(opts) : correrOutbox(opts)); } finally { setOcupado(false); }
+    try { await ({ saga: correrSaga, outbox: correrOutbox, es: correrEs, coord: correrCoord, part: correrPart, cap: correrCap }[escena])(opts); } finally { setOcupado(false); }
   };
 
   const E = ESCENAS[escena];
@@ -178,8 +288,8 @@ export default function Diagramas() {
       <h1 className="h-lg">{E.titulo}</h1>
       <p className="exp">{E.nota}</p>
       <div className="row-btns">
-        {Object.entries(ESCENAS).map(([k, v]) => (
-          <button key={k} className={`btn ${k === escena ? '' : 'ghost'}`} onClick={() => !ocupado && setEscena(k)}>{k === 'saga' ? 'SAGA' : 'Outbox + CDC'}</button>
+        {['es', 'outbox', 'saga', 'coord', 'part', 'cap'].map((k) => [k, ESCENAS[k]]).map(([k, v]) => (
+          <button key={k} className={`btn ${k === escena ? '' : 'ghost'}`} onClick={() => !ocupado && setEscena(k)}>{v.tab}</button>
         ))}
       </div>
       <div className="diag-grid">

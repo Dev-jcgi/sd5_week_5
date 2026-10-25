@@ -6,11 +6,18 @@
 // Pasos: reservarCreditos → procesarImagenes (con reintentos y backoff) → publicarCdn → notificar
 // Si un paso falla de forma permanente, el orquestador ejecuta las COMPENSACIONES en orden inverso.
 const { app } = require('@azure/functions');
-const df = require('durable-functions');
-// Algunas combinaciones de Core Tools/Node no exponen df.app al cargar el módulo:
-// se toman los submódulos directamente para que la demo no dependa de eso.
-const dfApp = df.app || require('durable-functions/lib/src/app');
-const dfInput = df.input || require('durable-functions/lib/src/input');
+// durable-functions v3 es obligatorio para el modelo v4 de Node. Si falta o es otra
+// versión, la demo 3 se desactiva y el resto del laboratorio sigue funcionando.
+let df = null;
+let dfVersion = 'no instalado';
+try {
+  df = require('durable-functions');
+  dfVersion = require('durable-functions/package.json').version;
+  if (!df.app || !df.input) throw new Error(`durable-functions ${dfVersion} no es la v3`);
+} catch (e) {
+  console.warn(`[SAGA] Demo 3 desactivada: ${e.message}. Ejecuta: npm install durable-functions@3.6.0`);
+  df = null;
+}
 const { bitacora } = require('../lib/clientes');
 
 // Contador de intentos en memoria (solo para simular fallas temporales en la demo).
@@ -77,11 +84,12 @@ const actividades = {
   borrarDelCdn: async (i, ctx) => { await log(ctx, i, 'COMPENSA CDN: archivos borrados'); return 'ok'; },
 };
 
-dfApp.orchestration('sagaProcesarLote', sagaProcesarLote);
-for (const [nombre, handler] of Object.entries(actividades)) dfApp.activity(nombre, { handler });
+if (df) {
+df.app.orchestration('sagaProcesarLote', sagaProcesarLote);
+for (const [nombre, handler] of Object.entries(actividades)) df.app.activity(nombre, { handler });
 
 app.http('sagaIniciar', {
-  methods: ['POST'], authLevel: 'anonymous', route: 'saga/lotes', extraInputs: [dfInput.durableClient()],
+  methods: ['POST'], authLevel: 'anonymous', route: 'saga/lotes', extraInputs: [df.input.durableClient()],
   handler: async (req, ctx) => {
     const body = await req.json().catch(() => ({}));
     const input = { imagenes: body.imagenes || 3, fallaEn: body.fallaEn || null, fallasTemporales: body.fallasTemporales || 0 };
@@ -93,12 +101,18 @@ app.http('sagaIniciar', {
 });
 
 app.http('sagaEstado', {
-  methods: ['GET'], authLevel: 'anonymous', route: 'saga/{instanceId}', extraInputs: [dfInput.durableClient()],
+  methods: ['GET'], authLevel: 'anonymous', route: 'saga/{instanceId}', extraInputs: [df.input.durableClient()],
   handler: async (req, ctx) => {
     const s = await df.getClient(ctx).getStatus(req.params.instanceId);
     if (!s) return { status: 404, jsonBody: { error: 'No existe esa saga' } };
     return { jsonBody: { estado: s.runtimeStatus, detalle: s.customStatus, resultado: s.output } };
   },
 });
+} else {
+  app.http('sagaIniciar', {
+    methods: ['POST'], authLevel: 'anonymous', route: 'saga/lotes',
+    handler: async () => ({ status: 503, jsonBody: { error: `Demo 3 desactivada: durable-functions ${dfVersion}. Ejecuta npm install durable-functions@3.6.0 y reinicia func start.` } }),
+  });
+}
 
 module.exports = { sagaProcesarLote, actividades, PASOS };

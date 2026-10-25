@@ -4,8 +4,9 @@ Todo lo de la sesión de 100 minutos en un repositorio:
 
 | Parte | Dónde | Qué es |
 |---|---|---|
-| Presentación + Arena | `src/` (sitio en GitHub Pages) | 61 diapositivas animadas sincronizadas con el profesor y quiz en vivo (12 rondas, 30 preguntas) |
-| Diagramas interactivos | `#/diagramas` | SAGA con compensaciones y Outbox + CDC frente al dual write (JointJS + anime.js) |
+| Presentación + Arena | `src/` (sitio en GitHub Pages) | 49 diapositivas sencillas sincronizadas con el profesor y 6 rondas con actividades tipo Mentimeter (nube de palabras, escala, pregunta abierta, 100 puntos, adivina el número, ordenar y quiz) |
+| Diagramas interactivos | `#/diagramas` | Seis escenas (Event Sourcing, Outbox + CDC, SAGA, coordinación, particiones y CAP) con JointJS + anime.js |
+| Guía sin código | `guia-azure.html` | PixPro Lite paso a paso en el portal de Azure (Storage, Event Grid, Service Bus, Logic Apps) |
 | Laboratorio en Azure | [`azure-lab/`](azure-lab/README.md) | Event Sourcing, Outbox + CDC, SAGA orquestada y resiliencia con Azure Functions (Node.js) |
 
 Temas: almacenar y reproducir eventos · bandeja de salida, CDC y SAGA · coordinación (orquestación y coreografía) · optimización del flujo y latencia · compensaciones entre consistencia, disponibilidad y escalabilidad.

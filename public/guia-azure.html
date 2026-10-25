@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PixPro Lite en Azure</title>
+<meta name="description" content="Guía paso a paso para construir una app con arquitectura basada en eventos desde el portal de Azure, sin escribir código (Semanas 4 y 5).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0E13;--surface:#141A22;--surface2:#1B2330;--line:#2B3647;--fg:#EEF0E8;--muted:#A7B0BE;--lime:#C6F33A;--blue:#6EA8FF;--org:#FF8A3D;--pur:#B78CFF;--mint:#7FE3C4;--bad:#FF6B8B;--ink:#0B0E13;--note:#FFE79A}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F2F1EA;--surface:#FBFBF8;--surface2:#EAE8DF;--line:#D6D3C8;--fg:#10141A;--muted:#4A5363;--lime:#5B7A00;--blue:#1F5FC4;--org:#C2410C;--pur:#6B3FC4;--mint:#0E7A5C;--bad:#C0264A;--ink:#FFFFFF;--note:#FFF1B8}}
+:root[data-theme="light"]{--bg:#F2F1EA;--surface:#FBFBF8;--surface2:#EAE8DF;--line:#D6D3C8;--fg:#10141A;--muted:#4A5363;--lime:#5B7A00;--blue:#1F5FC4;--org:#C2410C;--pur:#6B3FC4;--mint:#0E7A5C;--bad:#C0264A;--ink:#FFFFFF;--note:#FFF1B8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 'Space Grotesk',system-ui,Arial,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 16px 80px}
+.eyebrow{font:700 13px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin:0 0 8px}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.02;letter-spacing:-.03em;margin:0 0 14px}
+h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.02em;margin:56px 0 10px;line-height:1.1}
+h3{font-size:20px;margin:0 0 6px}
+p{margin:0 0 12px}
+.lead{font-size:20px;color:var(--muted);max-width:780px}
+code,.mono{font-family:'JetBrains Mono',monospace;font-size:.88em}
+code{background:var(--surface2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;overflow-wrap:anywhere}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.grid{display:grid;gap:14px}
+@media(min-width:760px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+.tag{display:inline-block;font:700 12px 'JetBrains Mono',monospace;padding:3px 10px;border-radius:999px;color:var(--ink);margin:0 6px 6px 0}
+.t4{background:var(--blue)}.t5{background:var(--org)}
+.diagram{overflow-x:auto;margin:18px 0}
+.diagram svg{min-width:860px;width:100%;height:auto}
+.step{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:10px 0}
+.step input{width:22px;height:22px;margin-top:4px;accent-color:var(--lime)}
+.step.done{opacity:.6}
+.step ol,.step ul{margin:6px 0 0;padding-left:20px}
+.step li{margin:3px 0}
+.why{border-left:4px solid var(--pur);background:var(--surface2);border-radius:0 12px 12px 0;padding:10px 14px;margin:10px 0 0;font-size:15.5px}
+.why b{color:var(--pur)}
+.warn{border-left:4px solid var(--org);background:var(--surface2);border-radius:0 12px 12px 0;padding:10px 14px;margin:12px 0;font-size:15.5px}
+table{width:100%;border-collapse:collapse;font-size:15.5px}
+th,td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tw{overflow-x:auto}
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .in{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.prog{flex:1;min-width:160px;height:8px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lime),var(--blue));transition:width .4s}
+.bar a{color:var(--muted);text-decoration:none;font-size:14px}
+.bar a:hover{color:var(--fg)}
+button.th{background:var(--surface);border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.note{font-size:14px;color:var(--muted)}
+.pill{font:700 12px 'JetBrains Mono',monospace;color:var(--lime)}
+a{color:var(--blue)}
+.kbd{font:700 13px 'JetBrains Mono',monospace;background:var(--surface2);border:1px solid var(--line);border-bottom-width:3px;border-radius:7px;padding:0 6px}
+</style>
+</head>
+<body>
+<div class="bar"><div class="in">
+  <span class="pill">PixPro Lite</span>
+  <div class="prog" aria-label="Progreso"><i id="pg"></i></div>
+  <span class="mono note" id="pgt">0 / 0</span>
+  <a href="#construir">Pasos</a><a href="#probar">Probar</a><a href="#conceptos">Conceptos</a>
+  <button class="th" id="th" type="button" aria-label="Cambiar tema">Tema</button>
+</div></div>
+<main class="wrap">
+<p class="eyebrow">DS5 · Semanas 4 y 5 · Práctica sin código</p>
+<h1>PixPro Lite: una app basada en eventos armada desde el portal de Azure</h1>
+<p class="lead">Vas a construir una versión mínima de PixPro solo con clics: subes una imagen, se dispara un evento, el evento viaja por un broker, un flujo lo procesa, guarda su historial y, si algo sale mal, compensa. Unos 60 minutos y centavos de crédito de Azure for Students.</p>
+
+<div class="diagram card" role="img" aria-label="Diagrama: Blob Storage publica BlobCreated en Event Grid; Event Grid lo reparte a una cola de Service Bus y a una cola de auditoría; Logic Apps consume la cola de Service Bus, escribe en las tablas eventos y vistalotes, y si falla mueve el archivo al contenedor rechazadas.">
+<svg viewBox="0 0 960 360" xmlns="http://www.w3.org/2000/svg" font-family="Space Grotesk, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#a)">
+<path d="M150 120H226"/><path d="M386 106C430 106 430 70 474 70"/><path d="M386 134C430 134 430 230 474 230"/><path d="M634 70H706"/><path d="M786 104V176"/><path d="M786 104C786 140 880 150 880 176" stroke="var(--org)" stroke-dasharray="6 6"/><path d="M640 300H706" stroke="var(--org)" stroke-dasharray="6 6"/>
+</g>
+<g font-size="15" font-weight="700" fill="var(--fg)" text-anchor="middle">
+<rect x="10" y="80" width="140" height="80" rx="14" fill="var(--surface2)" stroke="var(--blue)" stroke-width="2"/><text x="80" y="115">Blob Storage</text><text x="80" y="136" font-size="12" font-weight="400" fill="var(--muted)">contenedor subidas</text>
+<rect x="226" y="80" width="160" height="80" rx="14" fill="var(--surface2)" stroke="var(--pur)" stroke-width="2"/><text x="306" y="115">Event Grid</text><text x="306" y="136" font-size="12" font-weight="400" fill="var(--muted)">pub/sub · BlobCreated</text>
+<rect x="474" y="30" width="160" height="80" rx="14" fill="var(--surface2)" stroke="var(--lime)" stroke-width="2"/><text x="554" y="65">Service Bus</text><text x="554" y="86" font-size="12" font-weight="400" fill="var(--muted)">cola lotes · DLQ</text>
+<rect x="474" y="190" width="160" height="80" rx="14" fill="var(--surface2)" stroke="var(--mint)" stroke-width="2"/><text x="554" y="225">Storage Queue</text><text x="554" y="246" font-size="12" font-weight="400" fill="var(--muted)">auditoria</text>
+<rect x="706" y="30" width="160" height="80" rx="14" fill="var(--surface2)" stroke="var(--org)" stroke-width="2"/><text x="786" y="65">Logic App</text><text x="786" y="86" font-size="12" font-weight="400" fill="var(--muted)">consumidor · SAGA</text>
+<rect x="706" y="176" width="130" height="70" rx="14" fill="var(--surface2)" stroke="var(--blue)" stroke-width="2"/><text x="771" y="206">Tabla eventos</text><text x="771" y="226" font-size="12" font-weight="400" fill="var(--muted)">event store</text>
+<rect x="846" y="176" width="110" height="70" rx="14" fill="var(--surface2)" stroke="var(--blue)" stroke-width="2"/><text x="901" y="206">vistalotes</text><text x="901" y="226" font-size="12" font-weight="400" fill="var(--muted)">vista (CQRS)</text>
+<rect x="706" y="270" width="160" height="60" rx="14" fill="var(--surface2)" stroke="var(--org)" stroke-width="2" stroke-dasharray="6 5"/><text x="786" y="298">rechazadas</text><text x="786" y="317" font-size="12" font-weight="400" fill="var(--muted)">compensación</text>
+<text x="560" y="318" font-size="13" font-weight="400" fill="var(--org)" text-anchor="end">si falla →</text>
+</g>
+</svg>
+</div>
+
+<div class="grid g3">
+  <div class="card"><h3>Productor</h3><p class="note">La cuenta de almacenamiento: cada imagen subida genera el evento <code>BlobCreated</code>, sin código.</p></div>
+  <div class="card"><h3>Brokers</h3><p class="note">Event Grid reparte (pub/sub) y Service Bus guarda los mensajes con reintentos y cola de mensajes muertos.</p></div>
+  <div class="card"><h3>Consumidor</h3><p class="note">Un flujo de Logic Apps que registra el evento, actualiza una vista y compensa si la imagen no es válida.</p></div>
+</div>
+
+<div class="warn"><b>Antes de empezar:</b> usa tu suscripción <b>Azure for Students</b>, una sola región para todo (por ejemplo <code>East US</code>; si no te deja crear recursos ahí, prueba <code>West US 3</code>) y un solo grupo de recursos. Al final lo borras completo. El portal puede mostrar los botones en español o en inglés; aquí van los dos nombres cuando difieren.</div>
+
+<h2 id="construir">1 · Preparar la suscripción</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea el grupo de recursos</h3>
+<ol><li>En el buscador del portal escribe <b>Grupos de recursos</b> (<i>Resource groups</i>) → <b>Crear</b>.</li>
+<li>Nombre: <code>rg-pixpro-lite</code>. Región: la que elegiste. <b>Revisar y crear</b> → <b>Crear</b>.</li></ol>
+<div class="why"><b>Por qué:</b> todo lo de la práctica vive aquí; borrar el grupo al final elimina todo y deja de cobrar.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Registra Event Grid en tu suscripción</h3>
+<ol><li>Busca <b>Suscripciones</b> → abre tu suscripción → <b>Proveedores de recursos</b> (<i>Resource providers</i>).</li>
+<li>Busca <code>Microsoft.EventGrid</code>; si dice <i>NotRegistered</i>, selecciónalo y pulsa <b>Registrar</b>. Tarda uno o dos minutos.</li></ol></div></div>
+
+<h2>2 · El productor: cuenta de almacenamiento</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea la cuenta de almacenamiento</h3>
+<ol><li><b>Crear un recurso</b> → <b>Cuenta de almacenamiento</b> → <b>Crear</b>.</li>
+<li>Grupo: <code>rg-pixpro-lite</code>. Nombre: <code>stpixprolite</code> + 4 números (solo minúsculas). Rendimiento: <b>Estándar</b>. Redundancia: <b>LRS</b>.</li>
+<li><b>Revisar y crear</b> → <b>Crear</b> → <b>Ir al recurso</b>.</li></ol>
+<div class="why"><b>Ojo:</b> solo las cuentas <i>StorageV2 (uso general v2)</i> publican eventos en Event Grid; es la opción por defecto.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea tres contenedores, dos tablas y una cola</h3>
+<ul><li><b>Almacenamiento de datos → Contenedores → + Contenedor</b>: <code>subidas</code>, <code>rechazadas</code> y <code>eventos-muertos</code> (todos privados).</li>
+<li><b>Almacenamiento de datos → Tablas → + Tabla</b>: <code>eventos</code> y <code>vistalotes</code>.</li>
+<li><b>Almacenamiento de datos → Colas → + Cola</b>: <code>auditoria</code>.</li></ul>
+<div class="why"><b>Semana 5:</b> <code>eventos</code> será el <i>event store</i> (solo se agregan filas) y <code>vistalotes</code> una vista lista para leer, la idea de CQRS. <code>rechazadas</code> sirve para la compensación de la SAGA.</div></div></div>
+
+<h2>3 · El broker durable: Service Bus</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea el espacio de nombres</h3>
+<ol><li>Busca <b>Service Bus</b> → <b>Crear</b>. Grupo <code>rg-pixpro-lite</code>, nombre <code>sb-pixpro-lite</code> + números, plan de tarifa <b>Básico</b>.</li>
+<li><b>Revisar y crear</b> → <b>Crear</b>.</li></ol>
+<div class="why"><b>Semana 4:</b> Service Bus es un broker <b>durable</b>: guarda cada mensaje hasta que alguien lo procesa. El plan Básico solo tiene colas (punto a punto), suficiente aquí. Si al conectar Event Grid el portal no te deja elegir la cola, cambia el plan a Estándar.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea la cola <code>lotes</code></h3>
+<ol><li>Dentro del recurso: <b>Entidades → Colas → + Cola</b>.</li>
+<li>Nombre <code>lotes</code>. <b>Número máximo de entregas</b> (<i>Max delivery count</i>): <code>3</code>. Deja marcada la opción de mensajes fallidos al expirar si aparece.</li></ol>
+<div class="why"><b>Semana 5:</b> si un mensaje falla 3 veces, Service Bus lo aparta automáticamente en la <b>Dead Letter Queue</b> de esta cola. Así un mensaje veneno no bloquea a los demás.</div></div></div>
+
+<h2>4 · El reparto: Event Grid (pub/sub)</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Suscripción 1: imágenes nuevas → cola <code>lotes</code></h3>
+<ol><li>Abre la cuenta de almacenamiento → <b>Eventos</b> (<i>Events</i>) → <b>+ Suscripción de eventos</b>.</li>
+<li>Nombre: <code>a-procesar</code>. Esquema: <b>Esquema de Event Grid</b>. Nombre del tema del sistema: <code>pixpro-blobs</code>.</li>
+<li>Tipos de eventos: deja solo <b>Blob Created</b>.</li>
+<li>Tipo de punto de conexión: <b>Cola de Service Bus</b> → <b>Configurar un punto de conexión</b> → elige <code>sb-pixpro-lite</code> y la cola <code>lotes</code>.</li>
+<li>Pestaña <b>Filtros</b>: activa <b>Habilitar filtrado por asunto</b> y en <b>El asunto empieza por</b> escribe <code>/blobServices/default/containers/subidas/</code>.</li>
+<li>Pestaña <b>Características adicionales</b>: activa <b>Habilitar mensajes fallidos</b> (dead-lettering) con el contenedor <code>eventos-muertos</code>, y en la directiva de reintento pon <b>Número máximo de intentos</b> = <code>5</code>.</li>
+<li><b>Crear</b>.</li></ol>
+<div class="why"><b>Semanas 4 y 5:</b> <code>BlobCreated</code> es un <b>evento de dominio</b> (en pasado: “se creó un blob”). Event Grid entrega <b>al menos una vez</b> (puede duplicar), reintenta con espera creciente y, si se rinde, guarda el evento en <code>eventos-muertos</code>.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Suscripción 2: el mismo evento → cola <code>auditoria</code></h3>
+<ol><li>De nuevo <b>Eventos → + Suscripción de eventos</b>. Nombre <code>a-auditoria</code>, mismo tipo <b>Blob Created</b> y mismo filtro de asunto.</li>
+<li>Tipo de punto de conexión: <b>Colas de almacenamiento</b> → la cuenta <code>stpixprolite…</code> → cola <code>auditoria</code>. <b>Crear</b>.</li></ol>
+<div class="why"><b>Semana 4:</b> esto es <b>pub/sub</b>. Un solo evento llega a dos consumidores independientes, y el productor no sabe que existen. Mañana puedes agregar un tercero sin tocar nada.</div></div></div>
+
+<h2>5 · El consumidor: Logic App con SAGA</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Crea la Logic App</h3>
+<ol><li>Busca <b>Logic Apps</b> → <b>Agregar</b> → plan <b>Consumo</b> (<i>Consumption</i>) → <b>Seleccionar</b>.</li>
+<li>Grupo <code>rg-pixpro-lite</code>, nombre <code>la-pixpro-lite</code>, misma región. <b>Revisar y crear</b> → <b>Crear</b> → <b>Ir al recurso</b> → <b>Diseñador de aplicaciones lógicas</b>.</li></ol></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Desencadenador: un mensaje en la cola</h3>
+<ol><li><b>Agregar un desencadenador</b> → busca <b>Service Bus</b> → <b>Cuando se recibe un mensaje en una cola (autocompletar)</b> (<i>When a message is received in a queue (auto-complete)</i>).</li>
+<li>Crea la conexión con tu espacio de nombres (<b>Cadena de conexión</b>: la copias de Service Bus → <b>Directivas de acceso compartido → RootManageSharedAccessKey</b>). Cola: <code>lotes</code>. Frecuencia: cada <code>1</code> minuto.</li></ol></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Leer el evento</h3>
+<ol><li><b>+ Nuevo paso</b> → <b>Operaciones de datos → Analizar JSON</b> (<i>Parse JSON</i>).</li>
+<li>Contenido: en <b>Expresión</b> escribe <code>json(base64ToString(triggerBody()?['ContentData']))</code>.</li>
+<li>Esquema: <b>Usar una carga de ejemplo</b> y pega <code>{"id":"x","subject":"/blobServices/default/containers/subidas/blobs/foto.jpg","eventType":"Microsoft.Storage.BlobCreated","eventTime":"2026-10-26T10:00:00Z","data":{"url":"https://…","contentType":"image/jpeg"}}</code>.</li></ol></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Guardar el hecho en el event store (con idempotencia)</h3>
+<ol><li><b>+ Nuevo paso</b> → <b>Azure Table Storage → Insertar entidad</b> (<i>Insert Entity</i>). Conexión con tu cuenta de almacenamiento. Tabla: <code>eventos</code>.</li>
+<li>Entidad (JSON): <code>{"PartitionKey":"@{last(split(body('Analizar_JSON')?['subject'],'/'))}","RowKey":"@{body('Analizar_JSON')?['id']}","Tipo":"ImagenSubida","Hora":"@{body('Analizar_JSON')?['eventTime']}"}</code></li></ol>
+<div class="why"><b>Semana 5:</b> <code>PartitionKey</code> = el archivo (nuestro “lote”) y <code>RowKey</code> = el id del evento. Si Event Grid entrega el mismo evento dos veces, la tabla rechaza la fila repetida: eso es un <b>consumidor idempotente</b> hecho con la clave.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Paso de la SAGA: procesar dentro de un Ámbito</h3>
+<ol><li><b>+ Nuevo paso</b> → <b>Control → Ámbito</b> (<i>Scope</i>). Renómbralo <code>Procesar</code>.</li>
+<li>Dentro, una <b>Condición</b>: <code>body('Analizar_JSON')?['data']?['contentType']</code> <b>empieza con</b> <code>image/</code>.</li>
+<li>Rama <b>Verdadero</b>: <b>Insertar o reemplazar entidad</b> en <code>vistalotes</code> con <code>PartitionKey</code> = <code>lotes</code>, <code>RowKey</code> = el nombre del archivo y <code>Estado</code> = <code>procesado</code>; después <b>Insertar entidad</b> en <code>eventos</code> con <code>Tipo</code> = <code>LoteProcesado</code> y <code>RowKey</code> = <code>@{guid()}</code>.</li>
+<li>Rama <b>Falso</b>: <b>Control → Terminar</b> con estado <b>Error</b> y mensaje <code>Formato inválido</code>.</li>
+<li>En cada acción de Table Storage: <b>Configuración → Directiva de reintentos → Intervalo exponencial</b>, 4 intentos.</li></ol>
+<div class="why"><b>Semana 5:</b> el reintento exponencial resuelve fallas <b>temporales</b> (un 503); un archivo que no es imagen es una falla <b>permanente</b> y no tiene sentido reintentarla: hay que compensar.</div></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Compensación: solo si <code>Procesar</code> falló</h3>
+<ol><li>Debajo del ámbito, <b>+ Nuevo paso</b> → otro <b>Ámbito</b> llamado <code>Compensar</code>.</li>
+<li>Selecciónalo → <b>Configuración → Ejecutar después de</b> (<i>Run after</i>) → en <code>Procesar</code> marca solo <b>Error</b> y <b>Se agotó el tiempo de espera</b>.</li>
+<li>Dentro: <b>Azure Blob Storage → Copiar blob</b> de <code>subidas/&lt;archivo&gt;</code> a <code>rechazadas/&lt;archivo&gt;</code>, luego <b>Eliminar blob</b> en <code>subidas</code>, luego <b>Insertar o reemplazar entidad</b> en <code>vistalotes</code> con <code>Estado</code> = <code>rechazado</code> e <b>Insertar entidad</b> en <code>eventos</code> con <code>Tipo</code> = <code>LoteRechazado</code>.</li>
+<li><b>Guardar</b>.</li></ol>
+<div class="why"><b>Semana 5:</b> esto es una <b>SAGA orquestada</b> en miniatura. La Logic App es el orquestador; no hay rollback global, así que se ejecuta otra acción que deshace el efecto (mover el archivo) y se registra un evento compensatorio.</div></div></div>
+
+<h2 id="probar">6 · Probar los conceptos</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Camino feliz</h3>
+<p>Sube un <code>.jpg</code> al contenedor <code>subidas</code> (<b>Cargar</b>). En 1 o 2 minutos abre la Logic App → <b>Historial de ejecuciones</b>: todo en verde. En el <b>Explorador de almacenamiento</b> verás dos filas en <code>eventos</code> (ImagenSubida y LoteProcesado) y una en <code>vistalotes</code>.</p></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Falla permanente → compensación</h3>
+<p>Sube un <code>.txt</code>. La ejecución marca <code>Procesar</code> en rojo y <code>Compensar</code> en verde: el archivo aparece en <code>rechazadas</code>, <code>vistalotes</code> dice <code>rechazado</code> y el log tiene <code>LoteRechazado</code>. Nada se borró del historial.</p></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Pub/sub y broker durable</h3>
+<ol><li>Abre la cola <code>auditoria</code>: hay un mensaje por cada archivo, aunque nadie lo consuma (segundo suscriptor).</li>
+<li>En la Logic App pulsa <b>Deshabilitar</b> y sube tres imágenes. En Service Bus → cola <code>lotes</code> → <b>Service Bus Explorer</b> verás los mensajes esperando: el broker los guarda.</li>
+<li><b>Habilitar</b> otra vez: en un par de minutos los procesa todos. Nada se perdió.</li></ol></div></div>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Reto opcional: la Dead Letter Queue</h3>
+<p>Cambia el desencadenador por <b>Cuando se recibe un mensaje en una cola (bloqueo de inspección)</b> (<i>peek-lock</i>), agrega al final <b>Completar el mensaje</b> y, en <code>Compensar</code>, <b>Abandonar el mensaje</b> en lugar de mover el archivo. Sube un <code>.txt</code>: se entregará 3 veces y Service Bus lo moverá a la <b>cola de mensajes fallidos</b> (visible en Service Bus Explorer).</p></div></div>
+
+<h2 id="conceptos">7 · Qué concepto viste en cada pieza</h2>
+<div class="tw card"><table>
+<thead><tr><th>Pieza de Azure</th><th>Concepto</th><th>Semana</th></tr></thead>
+<tbody>
+<tr><td>Blob Storage + <code>BlobCreated</code></td><td>Productor; evento de dominio (en pasado)</td><td><span class="tag t4">S4</span></td></tr>
+<tr><td>Event Grid con dos suscripciones</td><td>Pub/sub: un evento, varios consumidores; desacoplamiento</td><td><span class="tag t4">S4</span></td></tr>
+<tr><td>Cola <code>lotes</code> de Service Bus</td><td>Broker durable, punto a punto; consistencia eventual</td><td><span class="tag t4">S4</span></td></tr>
+<tr><td>Reintentos de Event Grid y de Logic Apps</td><td>Retry con backoff exponencial; entrega at-least-once</td><td><span class="tag t5">S5</span></td></tr>
+<tr><td><code>RowKey</code> = id del evento</td><td>Consumidor idempotente</td><td><span class="tag t5">S5</span></td></tr>
+<tr><td>Tabla <code>eventos</code></td><td>Event Sourcing: log que solo crece</td><td><span class="tag t5">S5</span></td></tr>
+<tr><td>Tabla <code>vistalotes</code></td><td>Vista para leer (adelanto de CQRS)</td><td><span class="tag t5">S5</span></td></tr>
+<tr><td>Ámbitos <code>Procesar</code> / <code>Compensar</code></td><td>SAGA orquestada con compensación</td><td><span class="tag t5">S5</span></td></tr>
+<tr><td>Max delivery count = 3, <code>eventos-muertos</code></td><td>Dead Letter Queue; mensajes veneno</td><td><span class="tag t5">S5</span></td></tr>
+</tbody></table></div>
+
+<h2>8 · Limpieza (no te lo saltes)</h2>
+<div class="step"><input type="checkbox" aria-label="Paso hecho"><div><h3>Borra todo</h3>
+<p><b>Grupos de recursos</b> → <code>rg-pixpro-lite</code> → <b>Eliminar grupo de recursos</b> → escribe el nombre para confirmar. Así no se consume más crédito.</p></div></div>
+<p class="note">Los nombres de botones pueden variar ligeramente según el idioma y la versión del portal. Referencias: <a href="https://learn.microsoft.com/en-us/azure/event-grid/blob-event-quickstart-portal">Quickstart de eventos de Blob Storage</a> · <a href="https://learn.microsoft.com/azure/event-grid/delivery-and-retry">Entrega y reintentos de Event Grid</a> · <a href="https://learn.microsoft.com/th-th/azure/logic-apps/error-exception-handling">Manejo de errores en Logic Apps</a>.</p>
+</main>
+<script>
+(function(){
+  var K='pixpro-guia-azure', boxes=[].slice.call(document.querySelectorAll('.step input')), saved=[];
+  try{saved=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+  function paint(){var n=0;boxes.forEach(function(b){b.closest('.step').classList.toggle('done',b.checked);if(b.checked)n++});
+    document.getElementById('pg').style.width=(boxes.length?n*100/boxes.length:0)+'%';document.getElementById('pgt').textContent=n+' / '+boxes.length}
+  boxes.forEach(function(b,i){b.checked=!!saved[i];b.addEventListener('change',function(){try{localStorage.setItem(K,JSON.stringify(boxes.map(function(x){return x.checked})))}catch(e){}paint()})});
+  paint();
+  var r=document.documentElement;try{var t=localStorage.getItem(K+'-tema');if(t)r.setAttribute('data-theme',t)}catch(e){}
+  document.getElementById('th').addEventListener('click',function(){var dark=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;var n=dark?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem(K+'-tema',n)}catch(e){}});
+})();
+</script>
+</body>
+</html>

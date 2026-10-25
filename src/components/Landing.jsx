@@ -38,6 +38,7 @@ export default function Landing() {
           <div className="cta">
             <a className="btn" href="#/sala">Soy estudiante</a>
             <a className="btn ghost" href="#/diagramas">Diagramas interactivos</a>
+            <a className="btn ghost" href={`${import.meta.env.BASE_URL}guia-azure.html`}>Guía: PixPro Lite en Azure</a>
             <a className="btn ghost" href="#/profesor">Soy profesor</a>
           </div>
           {MODE === 'local' && <p className="note">Modo demo local activo: sin Firebase configurado, la sala solo funciona entre pestañas de este navegador.</p>}

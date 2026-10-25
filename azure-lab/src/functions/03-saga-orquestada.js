@@ -7,6 +7,10 @@
 // Si un paso falla de forma permanente, el orquestador ejecuta las COMPENSACIONES en orden inverso.
 const { app } = require('@azure/functions');
 const df = require('durable-functions');
+// Algunas combinaciones de Core Tools/Node no exponen df.app al cargar el módulo:
+// se toman los submódulos directamente para que la demo no dependa de eso.
+const dfApp = df.app || require('durable-functions/lib/src/app');
+const dfInput = df.input || require('durable-functions/lib/src/input');
 const { bitacora } = require('../lib/clientes');
 
 // Contador de intentos en memoria (solo para simular fallas temporales en la demo).
@@ -73,11 +77,11 @@ const actividades = {
   borrarDelCdn: async (i, ctx) => { await log(ctx, i, 'COMPENSA CDN: archivos borrados'); return 'ok'; },
 };
 
-df.app.orchestration('sagaProcesarLote', sagaProcesarLote);
-for (const [nombre, handler] of Object.entries(actividades)) df.app.activity(nombre, { handler });
+dfApp.orchestration('sagaProcesarLote', sagaProcesarLote);
+for (const [nombre, handler] of Object.entries(actividades)) dfApp.activity(nombre, { handler });
 
 app.http('sagaIniciar', {
-  methods: ['POST'], authLevel: 'anonymous', route: 'saga/lotes', extraInputs: [df.input.durableClient()],
+  methods: ['POST'], authLevel: 'anonymous', route: 'saga/lotes', extraInputs: [dfInput.durableClient()],
   handler: async (req, ctx) => {
     const body = await req.json().catch(() => ({}));
     const input = { imagenes: body.imagenes || 3, fallaEn: body.fallaEn || null, fallasTemporales: body.fallasTemporales || 0 };
@@ -89,7 +93,7 @@ app.http('sagaIniciar', {
 });
 
 app.http('sagaEstado', {
-  methods: ['GET'], authLevel: 'anonymous', route: 'saga/{instanceId}', extraInputs: [df.input.durableClient()],
+  methods: ['GET'], authLevel: 'anonymous', route: 'saga/{instanceId}', extraInputs: [dfInput.durableClient()],
   handler: async (req, ctx) => {
     const s = await df.getClient(ctx).getStatus(req.params.instanceId);
     if (!s) return { status: 404, jsonBody: { error: 'No existe esa saga' } };

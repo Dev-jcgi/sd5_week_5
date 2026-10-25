@@ -1,0 +1,27 @@
+<section id="esquemas" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">04 · Técnica 3 · Eventos bien diseñados</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Encabezado útil, cuerpo mínimo</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:560px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><div class="n" style="left:0;top:0;width:840px;height:540px;align-items:stretch;justify-content:flex-start;padding:0;overflow:hidden;font-weight:400"><div style="background:#231A3A;padding:16px 28px;font:700 22px ui-monospace,Menlo,monospace;color:#B78CFF;letter-spacing:2px;text-align:left">ENCABEZADO · metadatos</div><div id="h" style="padding:8px 28px"></div><div style="background:#1A2410;padding:16px 28px;font:700 22px ui-monospace,Menlo,monospace;color:#C6F33A;letter-spacing:2px;text-align:left">CUERPO · datos mínimos</div><div id="bd" style="padding:8px 28px"></div></div><div id="ann"></div><div class="cap" id="cap" style="left:900px;top:470px;width:764px;text-align:left"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const L=(p,k,v,id)=>mk('','<span style="color:#A7B0BE">'+k+':</span> <span id="'+(id||'')+'" style="color:#EEF0E8">'+v+'</span>',{font:'400 26px ui-monospace,Menlo,monospace',lineHeight:'40px',textAlign:'left'},p);
+L('h','id','"e-81f3"');L('h','tipo','"ImagenProcesada"');L('h','timestamp','"2026-10-26T10:15:02Z"');L('h','schemaVersion','<b id="sv">1</b>');L('h','correlationId','"lote_481"');
+L('bd','loteId','"lote_481"');L('bd','imagen','"img_2"');L('bd','ms','812');
+const N=[[66,'id → descartar duplicados','#B78CFF'],[146,'timestamp → ordenar','#B78CFF'],[188,'versión → evolucionar sin romper','#B78CFF'],[230,'correlationId → seguir el lote por todos los servicios','#B78CFF']];
+async function go(){for(;;){reset();$('sv').textContent='1';const g=document.getElementById('gpu');g&&g.remove();
+say('El encabezado ayuda a procesar; el cuerpo lleva solo lo necesario');
+for(const [y,t,c] of N){show(mk('chip tmp','← '+t,{left:'860px',top:px(y),color:c,border:'2px solid '+c,opacity:0}));await S(650)}
+await S(1500);say('v2 agrega un campo opcional: gpu','#C6F33A');const r=L('bd','gpu','"T4" <span style="color:#C6F33A">// nuevo, opcional</span>');r.id='gpu';r.classList.add('tmp');show(r);$('sv').textContent='2';A('sv',[{color:'#C6F33A'}]);
+await S(1000);show(mk('n tmp','Consumidor viejo (v1)<small style="color:#C6F33A">ignora “gpu” → ✓ sigue funcionando</small>',{left:'900px',top:'320px',width:'764px',height:'110px',borderColor:'#C6F33A',opacity:0}));await S(1600);
+say('✕ Renombrar “imagen” a “img” rompería a todos los consumidores viejos','#FF6B8B');await S(4800)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5, Elegir el diseño correcto de esquema de eventos</p>
+
+</section>

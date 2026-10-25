@@ -2,61 +2,49 @@
   "title": "DS5 · Semana 5 · Arquitectura Basada en Eventos 2",
   "order": [
     "cover",
-    "agenda",
-    "curso",
-    "arena",
-    "g1a",
+    "hoy",
+    "r1",
     "checkpoint",
     "pixpro",
-    "g1b",
-    "puente",
-    "peligros",
-    "g2a",
+    "evento",
+    "componentes",
+    "problema",
     "d1",
-    "es-idea",
+    "es-banco",
     "es-replay",
-    "es-store",
     "es-reparar",
     "es-cqrs",
-    "lab1",
-    "g2b",
-    "g3a",
+    "es-pixpro",
+    "r2",
     "d2",
     "dualwrite",
     "outbox",
     "cdc",
     "ocdc",
-    "saga",
+    "2pc",
+    "saga-viaje",
     "saga-anim",
-    "saga-tech",
-    "ftth",
-    "lab2",
-    "g3b",
-    "g4a",
+    "saga-reglas",
+    "r3",
     "d3",
     "orq-coreo",
-    "orq-tabla",
+    "orq-cuando",
     "concurrencia",
     "fuera-orden",
-    "lab3",
-    "g4b",
-    "g5a",
+    "r4",
     "d4",
     "latencia",
-    "tecnicas",
-    "esquemas",
+    "batching",
     "particiones",
-    "lab5",
-    "g5b",
-    "g6a",
+    "esquemas",
+    "r5",
     "d5",
     "cap",
-    "modelos",
+    "consistencia",
     "entrega",
     "resiliencia",
     "matriz",
-    "lab4",
-    "g6b",
+    "r6",
     "actividad1",
     "tarea54",
     "resumen",
@@ -65,39 +53,35 @@
   ],
   "sections": [
     {
-      "title": "Apertura: portada, agenda, estructura del curso y reglas de la Arena PixPro",
+      "title": "Apertura: el hilo de la clase, rompehielos y capstone checkpoint",
       "start": "cover"
     },
     {
-      "title": "Capstone checkpoint: estado de PixPro y qué gana hoy con EDA 2",
-      "start": "g1a"
+      "title": "Repaso de la Semana 4 y el problema de hoy",
+      "start": "evento"
     },
     {
-      "title": "Puente desde EDA 1: servicios dirigidos por eventos y peligros comunes",
-      "start": "puente"
+      "title": "Tema 1: guardar y reproducir eventos (Event Sourcing)",
+      "start": "d1"
     },
     {
-      "title": "Almacenar y reproducir eventos: Event Sourcing, snapshots, reparación de estado y CQRS",
-      "start": "g2a"
+      "title": "Tema 2: Outbox, CDC y SAGA",
+      "start": "d2"
     },
     {
-      "title": "Bandeja de salida, CDC y patrón SAGA",
-      "start": "g3a"
+      "title": "Tema 3: coordinar flujos complejos",
+      "start": "d3"
     },
     {
-      "title": "Coordinación de componentes: orquestación, coreografía y concurrencia",
-      "start": "g4a"
+      "title": "Tema 4: optimizar el flujo y la latencia",
+      "start": "d4"
     },
     {
-      "title": "Optimización del flujo de eventos y reducción de la latencia",
-      "start": "g5a"
+      "title": "Tema 5: consistencia, disponibilidad y escalabilidad",
+      "start": "d5"
     },
     {
-      "title": "Compensaciones entre consistencia, disponibilidad y escalabilidad",
-      "start": "g6a"
-    },
-    {
-      "title": "Cierre: actividades de la semana, resumen y fuentes",
+      "title": "Cierre: Actividad 1, Tarea 5.4, resumen y fuentes",
       "start": "actividad1"
     }
   ]

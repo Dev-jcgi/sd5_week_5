@@ -1,0 +1,24 @@
+<section id="problema" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">El problema de hoy</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">En un sistema distribuido, cualquier flecha falla</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:500px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><svg width="1664" height="160"><path d="M260 90H351M611 90H702M962 90H1053M1313 90H1404" stroke="#2B3647" stroke-width="5"/></svg><div class="n" style="left:0;top:40px;width:260px;height:100px">SPA</div><div class="n" style="left:351px;top:40px;width:260px;height:100px">API + BD</div><div class="n" style="left:702px;top:40px;width:260px;height:100px">Broker</div><div class="n" id="ia" style="left:1053px;top:40px;width:260px;height:100px">Digester<small>IA</small></div><div class="n" style="left:1404px;top:40px;width:260px;height:100px">Notifier</div><div id="w"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const P=[[656,'Se guardó el lote, pero el evento nunca salió','2 · Outbox / CDC','#FF8A3D'],[1007,'El mensaje llegó dos veces… o en desorden','3 · Coordinar','#B78CFF'],[-1,'La IA falló y los créditos ya estaban cobrados','2 · SAGA','#FF8A3D'],
+[null,'¿Qué le pasó exactamente al lote 481 el martes?','1 · Guardar eventos','#6EA8FF'],[1358,'El aviso al usuario tardó 8 segundos','4 · Latencia','#C6F33A'],[null,'Se cayó la red: ¿muestro un dato viejo o un error?','5 · Elegir','#7FE3C4']];
+async function go(){for(;;){reset();
+for(let i=0;i<P.length;i++){const [x,t,g,c]=P[i];
+if(x){const m=mk('tmp','✕',{position:'absolute',left:px(x<0?1290:x-22),top:px(x<0?22:66),width:'44px',height:'44px',borderRadius:'50%',background:'#FF6B8B',color:'#0B0E13',font:'700 28px ui-sans-serif',display:'flex',alignItems:'center',justifyContent:'center'});A(m,[{transform:'scale(0)'},{transform:'scale(1.3)'},{transform:'none'}],{duration:500})}
+const b=mk('n tmp','<span style="font-size:27px;font-weight:600">'+t+'</span><span class="m" style="color:'+c+'">'+g+'</span>',{left:px((i%3)*572),top:px(i<3?200:350),width:'520px',height:'124px',borderColor:c,padding:'0 18px',opacity:0});show(b);await S(1500)}
+await S(5000)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5, Posibles peligros en el desarrollo · S. Pandey, Potential pitfalls in EDA</p>
+
+</section>

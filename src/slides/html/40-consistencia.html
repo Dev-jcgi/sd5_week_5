@@ -1,0 +1,23 @@
+<section id="consistencia" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">05 · Fuerte o eventual</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Cada dato elige su nivel de consistencia</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:520px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><div style="position:absolute;left:60px;top:120px;font:700 24px ui-monospace,Menlo,monospace;color:#6EA8FF;letter-spacing:2px">FUERTE · siempre exacto, más lento</div><div style="position:absolute;right:60px;top:120px;font:700 24px ui-monospace,Menlo,monospace;color:#C6F33A;letter-spacing:2px">EVENTUAL · rápido, se pone al día</div><div style="position:absolute;left:60px;top:170px;width:1544px;height:22px;border-radius:11px;background:linear-gradient(90deg,#6EA8FF,#B78CFF 40%,#7FE3C4 70%,#C6F33A)"></div><div id="w"></div><div class="cap" id="cap" style="top:470px"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const I=[['Saldo de créditos','siempre exacto · transacción local','#6EA8FF'],['Estado de MI lote','veo lo que yo escribí · sesión','#B78CFF'],['Galería de la comunidad','puede tardar unos segundos','#7FE3C4'],['Contador de “me gusta”','eventual: nadie se queja','#C6F33A']];
+async function go(){for(;;){reset();say('¿Qué tan fresco debe ser cada dato de PixPro?');
+for(let i=0;i<4;i++){const [t,s,c]=I[i],x=i*440;
+const st=mk('tmp','',{position:'absolute',left:px(x+170),top:'192px',width:'4px',height:'70px',background:c,transformOrigin:'top'});A(st,[{transform:'scaleY(0)'},{transform:'scaleY(1)'}],{duration:300});
+show(mk('n tmp',t+'<small>'+s+'</small>',{left:px(x),top:'262px',width:'344px',height:'150px',borderColor:c,opacity:0,fontSize:'27px',padding:'0 12px'}));await S(1300)}
+say('Fuerte cuesta latencia y disponibilidad; eventual escala. Se elige por dato, no por sistema','#C6F33A');await S(5200)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5, Por qué evitar consistencia fuerte · Bação y Guerreiro (2026), Computing 108:110</p>
+
+</section>

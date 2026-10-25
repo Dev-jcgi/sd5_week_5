@@ -1,0 +1,25 @@
+<section id="evento" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">Repaso Semana 4 · Eventos</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Un comando pide; un evento avisa</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:560px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><div style="position:absolute;left:0;top:0;width:800px;height:470px;border-radius:24px;background:#10151C"></div><div style="position:absolute;left:864px;top:0;width:800px;height:470px;border-radius:24px;background:#10151C"></div><div style="position:absolute;left:36px;top:26px;width:740px"><b style="font:700 26px ui-monospace,Menlo,monospace;color:#FF8A3D;letter-spacing:2px">COMANDO</b><div style="font-size:26px;color:#A7B0BE;margin-top:6px">“Haz esto” · a un solo destinatario · puede rechazarse</div></div><div style="position:absolute;left:900px;top:26px;width:740px"><b style="font:700 26px ui-monospace,Menlo,monospace;color:#C6F33A;letter-spacing:2px">EVENTO</b><div style="font-size:26px;color:#A7B0BE;margin-top:6px">“Esto pasó” · a quien le interese · es un hecho</div></div><div class="n" style="left:40px;top:220px;width:220px;height:100px">Upload</div><div class="n" id="dg" style="left:540px;top:220px;width:220px;height:100px">Digester<small id="dr">&nbsp;</small></div><div class="n" style="left:904px;top:220px;width:220px;height:100px">Upload</div><div class="n" id="c0" style="left:1404px;top:120px;width:220px;height:84px">Digester</div><div class="n" id="c1" style="left:1404px;top:228px;width:220px;height:84px">Créditos</div><div class="n" id="c2" style="left:1404px;top:336px;width:220px;height:84px">Auditoría</div><div class="cap" id="cap" style="top:500px"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};let k=0;async function go(){for(;;){reset();$('dr').textContent='\u00a0';
+say('Un comando va a un destinatario concreto y le pide algo');
+const c=mk('chip tmp','ProcesarImagen',{left:'60px',top:'160px',background:'#FF8A3D',color:'#0B0E13'});show(c,{duration:250});await S(300);await mv(c,470,160,1100);
+const ok=k++%2==0;lit('dg',ok?'#C6F33A':'#FF6B8B');$('dr').textContent=ok?'✓ acepto':'✕ ocupado: rechazo';$('dr').style.color=ok?'#C6F33A':'#FF6B8B';await S(1600);
+say('Un evento avisa que algo ya pasó: cualquiera que escuche reacciona','#C6F33A');
+const ys=[140,248,356],cs=ys.map(y=>{const e=mk('chip tmp','ImagenSubida',{left:'930px',top:'200px',background:'#C6F33A',color:'#0B0E13'});return e});
+await Promise.all(cs.map((e,i)=>mv(e,1190,ys[i]+10,1100)));['c0','c1','c2'].forEach(i=>lit(i,'#C6F33A'));
+await S(1200);say('Comandos en imperativo (ProcesarImagen); eventos en pasado (ImagenSubida)');await S(3500)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5, ¿Qué es un evento? (eventos de comando y de dominio)</p>
+
+</section>

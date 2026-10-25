@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/backend.js';
-import { QMAP } from '../data/rounds.js';
+import { QMAP, OPINION } from '../data/rounds.js';
 import { store, celebrate } from '../lib/fx.js';
 import SlideStage from './SlideStage.jsx';
 import { QuestionCard, RevealCard, Leaderboard, Podium } from './Game.jsx';
@@ -62,7 +62,7 @@ export default function Student() {
 
   const myPlayer = players.find((p) => p.id === me?.uid);
   useEffect(() => {
-    if (room?.status === 'reveal' && room.reveal && myPlayer?.results?.[room.reveal.qid]?.ok) celebrate(QMAP[room.reveal.qid]?.round.double);
+    if (room?.status === 'reveal' && room.reveal && (myPlayer?.results?.[room.reveal.qid]?.ok || myPlayer?.results?.[room.reveal.qid]?.pts)) celebrate(QMAP[room.reveal.qid]?.round.double);
     if (room?.status === 'end') celebrate(true);
   }, [room?.status, room?.seq]);
 
@@ -95,7 +95,7 @@ export default function Student() {
   let body;
   if (room.status === 'question' && q) {
     body = answered
-      ? <div className="qcard"><p className="eyebrow">Respuesta enviada</p><h2>{q.type === 'poll' ? '¡Voto registrado!' : 'Listo. Espera la revelación'}</h2><p className="exp">El profesor mostrará la respuesta en cuanto todos contesten o se acabe el tiempo.</p></div>
+      ? <div className="qcard"><p className="eyebrow">Respuesta enviada</p><h2>{OPINION.has(q.type) ? '¡Respuesta registrada!' : 'Listo. Espera la revelación'}</h2><p className="exp">El profesor mostrará la respuesta en cuanto todos contesten o se acabe el tiempo.</p></div>
       : <QuestionCard key={q.id + room.seq} q={q} t0={seen.current[key]} interactive onAnswer={send} />;
   } else if (room.status === 'reveal' && q) {
     body = <RevealCard q={q} reveal={room.reveal} mine={myPlayer?.results?.[q.id] || null} score={myPlayer?.score || 0} />;

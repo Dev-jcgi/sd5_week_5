@@ -1,0 +1,27 @@
+<section id="es-pixpro" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">01 · En PixPro</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">El historial de cada lote, evento por evento</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:620px"><!doctype html><html><head><style>body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,'Segoe UI',Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;box-sizing:border-box;border:3px solid #2B3647;background:#141A22;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:28px;font-weight:700;gap:4px;line-height:1.15}
+.n small,.m{font:400 22px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE}
+.cap{position:absolute;left:0;width:100%;text-align:center;font-size:28px;line-height:1.3}
+.chip{position:absolute;box-sizing:border-box;padding:8px 16px;border-radius:12px;font:700 22px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+.o0{opacity:0}svg{position:absolute;left:0;top:0;overflow:visible}</style></head><body><div style="position:absolute;left:0;top:0;width:1060px;display:flex;font:700 22px ui-monospace,Menlo,monospace;color:#A7B0BE;letter-spacing:1px"><span style="width:200px;padding-left:20px">LOTE</span><span style="width:90px">VER.</span><span style="width:330px">TIPO</span><span>DATOS</span></div><div id="rows"></div><div id="bad" class="o0" style="position:absolute;left:0;top:450px;width:1060px"></div><div id="b"></div><div class="cap" id="cap" style="top:560px"></div><script>const $=i=>typeof i=='string'?document.getElementById(i):i,S=ms=>new Promise(r=>setTimeout(r,ms));
+const A=(e,k,o)=>$(e).animate(k,Object.assign({duration:450,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'},o||{}));
+const show=(e,o)=>A(e,[{opacity:0,transform:'translateY(14px) scale(.96)'},{opacity:1,transform:'none'}],o);
+const hide=(e,o)=>A(e,[{opacity:0}],Object.assign({duration:300},o||{}));
+const say=(t,c)=>{const e=$('cap');e.textContent=t;e.style.color=c||'#EEF0E8';A(e,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350})};
+const lit=(e,c,bg)=>A(e,[{borderColor:c,background:bg||'#141A22'}],{duration:350});
+const mk=(cls,h,st,p)=>{const d=document.createElement('div');d.className=cls;d.innerHTML=h;Object.assign(d.style,st||{});($(p)||document.body).appendChild(d);return d};
+const px=v=>v+'px';
+const mv=(e,x,y,ms)=>A(e,[{left:px(x),top:px(y)}],{duration:ms||600,easing:'cubic-bezier(.6,0,.3,1)'}).finished;
+const reset=()=>{document.querySelectorAll('.tmp').forEach(e=>e.remove());document.getAnimations().forEach(a=>a.cancel())};const R=[['v1','LoteCreado','{ imagenes: 3 }','#6EA8FF'],['v2','CreditosReservados','{ creditos: 15 }','#B78CFF'],['v3','ImagenProcesada','{ img: 1, ms: 812 }','#C6F33A'],['v4','ImagenFallida','{ img: 2, motivo: "formato" }','#FF6B8B'],['v5','ImagenProcesada','{ img: 3, ms: 790 }','#C6F33A'],['v6','LoteCompletado','{ ok: 2, error: 1 }','#7FE3C4']];
+const row=(r,top,extra)=>mk('n tmp','<span style="width:180px">lote_481</span><span style="width:90px;color:#A7B0BE">'+r[0]+'</span><span style="width:330px;color:'+r[3]+'">'+r[1]+'</span><span class="m">'+r[2]+'</span>',Object.assign({left:'0',top:px(top),width:'1060px',height:'54px',flexDirection:'row',justifyContent:'flex-start',padding:'0 20px',fontSize:'24px',textAlign:'left',borderRadius:'12px',opacity:0},extra||{}),'rows');
+const B=[['Auditoría','quién cobró qué y cuándo','#6EA8FF'],['Historial del lote','el usuario ve cada paso','#C6F33A'],['Reprocesar','con un modelo de IA nuevo','#FF8A3D']];
+async function go(){for(;;){reset();say('Cada cosa que le pasa al lote se agrega como una fila nueva');
+for(let i=0;i<R.length;i++){show(row(R[i],44+i*64));await S(650)}
+for(let i=0;i<3;i++){const [t,s,c]=B[i];show(mk('n tmp',t+'<small>'+s+'</small>',{left:'1120px',top:px(44+i*126),width:'544px',height:'108px',borderColor:c,opacity:0}));await S(500)}
+await S(1200);say('Otro worker intenta escribir otra “v6”…','#FF6B8B');const x=row(['v6','ImagenProcesada','(otro worker)','#FF6B8B'],450,{borderColor:'#FF6B8B'});show(x);await S(800);
+A(x,[{transform:'translateX(0)'},{transform:'translateX(-14px)'},{transform:'translateX(14px)'},{transform:'translateX(0)'}],{duration:400,fill:'none'});
+say('✕ La versión 6 ya existe: conflicto. Relee el lote y reintenta como v7','#FF6B8B');await S(3000);
+say('Regla: lote + versión es único. Nunca se actualiza una fila: solo se agregan');await S(4200)}}go();</script></body></html></x-embed><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Diseño sugerido para el capstone: tabla de eventos con clave lote + versión</p>
+
+</section>

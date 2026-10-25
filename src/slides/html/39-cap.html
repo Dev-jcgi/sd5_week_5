@@ -1,0 +1,41 @@
+<section id="cap" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">05 · Teorema CAP · dos sucursales sin teléfono</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Con la red partida: dato viejo o ninguna respuesta</h2><x-embed style="position:absolute;left:128px;top:330px;width:1664px;height:470px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.n{position:absolute;top:120px;width:300px;height:170px;border-radius:22px;background:#141A22;border:3px solid #2B3647;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.n small{font:400 26px ui-monospace,Menlo,Consolas,monospace;color:#C6F33A;margin-top:8px}
+.cut{position:absolute;left:802px;top:60px;width:60px;height:300px;opacity:0}
+.cut i{position:absolute;left:28px;top:0;width:4px;height:300px;background:repeating-linear-gradient(#FF6B8B 0 18px,transparent 18px 30px)}
+.cl{position:absolute;width:200px;height:80px;border-radius:16px;background:#1A222D;border:2px solid #6EA8FF;display:flex;align-items:center;justify-content:center;font-size:26px}
+.msg{position:absolute;font:700 24px ui-monospace,Menlo,Consolas,monospace;padding:8px 14px;border-radius:10px;opacity:0;white-space:nowrap}
+.lk{position:absolute;left:600px;top:200px;width:464px;height:4px;background:#2B3647}
+.cap{position:absolute;left:0;top:400px;width:1664px;text-align:center;font-size:30px}
+</style></head><body>
+<div class="lk"></div>
+<div class="n" style="left:300px" id="g1">Nodo G1<small id="v1">foto = v0</small></div>
+<div class="n" style="left:1064px" id="g2">Nodo G2<small id="v2">foto = v0</small></div>
+<div class="cut" id="cut"><i></i></div>
+<div class="cl" style="left:0;top:165px">Usuario A</div><div class="cl" style="left:1464px;top:165px">Usuario B</div>
+<div class="msg" id="w" style="background:#C6F33A;color:#0B0E13">escribe v1</div>
+<div class="msg" id="r" style="background:#6EA8FF;color:#0B0E13">lee foto</div>
+<div class="msg" id="ap" style="left:1240px;top:330px;background:#FF8A3D;color:#0B0E13">AP: responde v0 (viejo)</div>
+<div class="msg" id="cp" style="left:1240px;top:330px;background:#B78CFF;color:#0B0E13">CP: error / espera</div>
+<div class="cap" id="cap"></div>
+<script>
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const say=t=>{$('cap').textContent=t;$('cap').animate([{opacity:0},{opacity:1}],{duration:350})};
+const show=(id,o)=>$(id).animate([{opacity:o?0:1},{opacity:o}],{duration:400,fill:'forwards'});
+async function go(){let k=0;for(;;){
+ ['cut','w','r','ap','cp'].forEach(i=>$(i).getAnimations().forEach(a=>a.cancel()));$('v1').textContent='foto = v0';$('v2').textContent='foto = v0';
+ say('1 · La red entre G1 y G2 se corta (partición)');await sleep(500);show('cut',1);await sleep(1500);
+ say('2 · A escribe v1 en G1; G2 no se entera');
+ await $('w').animate([{left:'40px',top:'110px',opacity:1},{left:'360px',top:'90px',opacity:1}],{duration:1000,fill:'forwards'}).finished;$('v1').textContent='foto = v1';show('w',0);await sleep(1200);
+ say('3 · B lee en G2…');
+ await $('r').animate([{left:'1500px',top:'110px',opacity:1},{left:'1130px',top:'90px',opacity:1}],{duration:1000,fill:'forwards'}).finished;
+ const ap=k++%2===0;
+ say(ap?'4 · …elegir A (disponibilidad): responde, aunque sea con dato viejo':'4 · …elegir C (consistencia): no responde hasta reconectar');
+ show(ap?'ap':'cp',1);await sleep(3600);
+}}
+go();
+</script></body></html></x-embed><p style="position:absolute;left:128px;top:830px;width:1664px;font-size:32px;line-height:1.4;color:#EEF0E8"><b>AP:</b> sigue respondiendo aunque el dato sea viejo. <b>CP:</b> prefiere un error a un dato equivocado.</p><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: Gilbert y Lynch (2002), prueba de la conjetura de Brewer · SD5 – Semana 5</p>
+
+</section>

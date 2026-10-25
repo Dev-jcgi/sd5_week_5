@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, MODE } from '../lib/backend.js';
 import { decryptJSON } from '../lib/crypto.js';
 import encrypted from '../data/answers.enc.json';
-import { ROUNDS, QMAP, ROUND_BY_SLIDE, points, isCorrect } from '../data/rounds.js';
+import { ROUNDS, QMAP, ROUND_BY_SLIDE, points, isCorrect, OPINION, validOpinion, closeness, aggregate } from '../data/rounds.js';
 import { SLIDES, SECTIONS } from '../lib/slides.js';
 import { store, newPin, celebrate } from '../lib/fx.js';
 import SlideStage from './SlideStage.jsx';
@@ -126,28 +126,38 @@ function Presenter({ pin, keyMap, onExit, onNewRoom, intro = true }) {
 
   const answeredCount = q ? players.filter((p) => answers[p.id]?.[q.id]).length : 0;
 
+  const valuesFor = (qq) => players.map((p) => answers[p.id]?.[qq.id]?.c).filter((c) => c !== undefined);
+
   const reveal = async () => {
     if (!q || busy) return;
     setBusy(true);
     const k = keyMap[q.id] || null;
-    const dist = q.o.map(() => 0);
+    const opinion = OPINION.has(q.type);
+    const dist = (q.o || []).map(() => 0);
     const rows = [];
     let n = 0, okCount = 0;
     players.forEach((p) => {
       const a = answers[p.id]?.[q.id];
       if (!a) return;
       n++;
-      if (typeof a.c === 'number' && a.c >= 0) dist[a.c]++;
-      const ok = q.type === 'poll' ? null : a.c === -1 ? false : isCorrect(q, k, a.c);
+      if (!opinion && q.type !== 'number' && typeof a.c === 'number' && a.c >= 0) dist[a.c]++;
+      if (q.type === 'poll' && typeof a.c === 'number' && a.c >= 0) dist[a.c]++;
+      let ok, extra;
+      if (opinion) { ok = null; extra = q.type === 'poll' ? a.c >= 0 : validOpinion(q, a.c); }
+      else if (q.type === 'number') { extra = k ? closeness(k, a.c) : 0; ok = a.c === -1 ? false : isCorrect(q, k, a.c); }
+      else ok = a.c === -1 ? false : isCorrect(q, k, a.c);
       if (ok) okCount++;
-      rows.push({ uid: p.id, ok, pts: points(q, ok === true, a.ms) });
+      rows.push({ uid: p.id, ok, pts: points(q, ok === true ? true : ok, a.ms, extra) });
     });
+    const agg = opinion && q.type !== 'poll' || q.type === 'number' ? aggregate(q, valuesFor(q)) : null;
+    const prev = q.compare && QMAP[q.compare] ? aggregate(QMAP[q.compare], valuesFor(QMAP[q.compare])) : null;
     try {
       if (!(room.scored || []).includes(q.id)) await api.applyScores(pin, q.id, rows);
-      await update({ status: 'reveal', scored: [...new Set([...(room.scored || []), q.id])], reveal: { qid: q.id, a: k ? k.a : null, e: k ? k.e : null, dist, n, okCount } });
-      if (okCount) celebrate(q.round.double);
+      await update({ status: 'reveal', scored: [...new Set([...(room.scored || []), q.id])], reveal: { qid: q.id, a: k ? k.a : null, e: k ? k.e : null, dist, n, okCount, agg, prev } });
+      if (okCount || opinion) celebrate(q.round.double);
     } finally { setBusy(false); }
   };
+  const live = q && (OPINION.has(q.type) && q.type !== 'poll') ? aggregate(q, valuesFor(q)) : null;
 
   const nextInRound = () => {
     const r = q.round; const i = r.qs.findIndex((x) => x.id === q.id);
@@ -212,7 +222,7 @@ function Presenter({ pin, keyMap, onExit, onNewRoom, intro = true }) {
   }
 
   let stage;
-  if (status === 'question' && q) stage = <div className="host-game"><QuestionCard key={q.id + room.seq} q={q} t0={room.startedAt} big answered={answeredCount} total={players.length} /></div>;
+  if (status === 'question' && q) stage = <div className="host-game"><QuestionCard key={q.id + room.seq} q={q} t0={room.startedAt} big answered={answeredCount} total={players.length} live={live} /></div>;
   else if (status === 'reveal' && q) stage = <div className="host-game"><RevealCard q={q} reveal={room.reveal} big /></div>;
   else if (status === 'board') stage = <div className="host-game"><Leaderboard players={players} limit={10} title="Ranking final" /></div>;
   else if (status === 'end') stage = <div className="host-game"><Podium players={players} /></div>;
@@ -280,7 +290,7 @@ function Presenter({ pin, keyMap, onExit, onNewRoom, intro = true }) {
           <div className="jump">{ROUNDS.map((r) => <button key={r.id} className="qbtn" onClick={() => { update({ slide: SLIDES.findIndex((s) => s.id === r.slide) }); launch(QMAP[r.qs[0].id]); }}>R{r.n} · {r.phase} · {r.topic}</button>)}</div>
           <p className="eyebrow">Registro ({players.length} jugadores)</p>
           <div className="tblw"><table><thead><tr><th>Pregunta</th><th>Resp.</th><th>Correctas</th><th>%</th></tr></thead>
-            <tbody>{log.map(({ q: qq, n, ok }) => <tr key={qq.id}><td>R{qq.round.n} · {qq.q.slice(0, 48)}{qq.q.length > 48 ? '…' : ''}</td><td>{n}</td><td>{qq.type === 'poll' ? '—' : ok}</td><td>{qq.type === 'poll' ? '—' : n ? Math.round((ok * 100) / n) + '%' : '0%'}</td></tr>)}
+            <tbody>{log.map(({ q: qq, n, ok }) => <tr key={qq.id}><td>R{qq.round.n} · {qq.q.slice(0, 48)}{qq.q.length > 48 ? '…' : ''}</td><td>{n}</td><td>{OPINION.has(qq.type) ? '—' : ok}</td><td>{OPINION.has(qq.type) ? '—' : n ? Math.round((ok * 100) / n) + '%' : '0%'}</td></tr>)}
             {!log.length && <tr><td colSpan={4} className="note">Aún no se revelan preguntas.</td></tr>}</tbody></table></div>
           <Leaderboard players={players} limit={100} title="Ranking completo" />
           <div className="row-btns">

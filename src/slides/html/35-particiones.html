@@ -1,0 +1,31 @@
+<section id="particiones" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">04 · Técnica 2 · Particionar</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Más carriles, pero cuidado con el saturado</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:470px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-monospace,Menlo,Consolas,monospace;color:#EEF0E8;overflow:hidden}
+.t{position:absolute;top:0;font-size:28px;font-weight:700;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif}
+.p{position:absolute;bottom:60px;width:80px;border-radius:10px 10px 0 0;height:0}
+.pl{position:absolute;bottom:20px;width:80px;text-align:center;font-size:24px;color:#A7B0BE}
+.hot{position:absolute;font-size:26px;font-weight:700;color:#FF6B8B;opacity:0}
+</style></head><body>
+<div class="t" style="left:0;color:#FF6B8B">Clave = userId (una agencia sube el 40 %)</div>
+<div class="t" style="left:880px;color:#C6F33A">Clave = loteId (1.1× el ideal)</div>
+<div id="g"></div>
+<div class="hot" id="hot" style="left:330px;top:60px">🔥 hotspot: 3.9× el ideal</div>
+<script>
+const A=[1508,1992,1328,1463,9702,1225,1721,1061],B=[2418,2583,2353,2519,2506,2585,2703,2333];
+const g=document.getElementById("g"),max=9702,H=320,sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function cols(data,x0,c,hotI){return data.map((n,i)=>{const p=document.createElement('div');p.className='p';p.style.left=(x0+i*100)+'px';p.style.background=i===hotI?'#FF6B8B':c;g.appendChild(p);
+ const l=document.createElement('div');l.className='pl';l.style.left=(x0+i*100)+'px';l.textContent='p'+i;g.appendChild(l);return [p,n]})}
+const a=cols(A,0,'#6EA8FF',4),b=cols(B,880,'#C6F33A',-1);
+async function go(){for(;;){
+ [...a,...b].forEach(([p])=>p.getAnimations().forEach(x=>x.cancel()));document.getElementById('hot').getAnimations().forEach(x=>x.cancel());
+ await sleep(400);
+ [...a,...b].forEach(([p,n],i)=>p.animate([{height:'0px'},{height:Math.max(6,n/max*H)+'px'}],{duration:1400,delay:i%8*90,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'}));
+ await sleep(1800);
+ document.getElementById('hot').animate([{opacity:0,transform:'scale(.7)'},{opacity:1,transform:'none'}],{duration:450,fill:'forwards'});
+ a[4][0].animate([{filter:'brightness(1)'},{filter:'brightness(1.5)'},{filter:'brightness(1)'}],{duration:800,iterations:3});
+ await sleep(4800);
+}}
+go();
+</script></body></html></x-embed><p style="position:absolute;left:128px;top:800px;width:1664px;font-size:30px;line-height:1.4;color:#EEF0E8">La <b>clave</b> decide el orden y el reparto: userId concentra a la agencia grande; loteId reparte y conserva el orden de cada lote.</p><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuente: SD5 – Semana 5, Particionamiento end-to-end · Evitando hotspotting · jcgi.lat/sd5_week_5/#/diagramas</p>
+
+</section>

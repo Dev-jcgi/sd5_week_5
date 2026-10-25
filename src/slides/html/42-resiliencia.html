@@ -1,0 +1,29 @@
+<section id="resiliencia" data-transition="push" style="background:#0B0E13;color:#EEF0E8;font-family:'Space Grotesk', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:3px;color:#C6F33A;text-transform:uppercase">05 · Resiliencia</p><h2 style="font-size:68px;font-weight:700;line-height:1.05;letter-spacing:-2px">Reintentar, cortar el circuito o apartar</h2><x-embed style="position:absolute;left:128px;top:300px;width:1664px;height:420px"><!doctype html><html><head><style>
+body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;color:#EEF0E8;overflow:hidden}
+.c{position:absolute;top:0;width:530px;height:410px;border-radius:22px;background:#10151C;border:2px solid #1E2733}
+.h{position:absolute;top:20px;width:530px;text-align:center;font-size:30px;font-weight:700}
+.tk{position:absolute;width:36px;height:36px;border-radius:8px}
+.lbl{position:absolute;font:24px ui-monospace,Menlo,Consolas,monospace;color:#A7B0BE;text-align:center;width:530px}
+.st{position:absolute;left:115px;top:150px;width:300px;height:110px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:700 30px ui-monospace,Menlo,Consolas,monospace;color:#0B0E13;background:#C6F33A}
+.q{position:absolute;width:210px;height:150px;border-radius:16px;border:3px solid #2B3647;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;box-sizing:border-box;font-size:24px;color:#A7B0BE}
+</style></head><body>
+<div class="c" style="left:0"></div><div class="h" style="left:0;color:#6EA8FF">Retry con backoff</div>
+<div class="c" style="left:567px"></div><div class="h" style="left:567px;color:#FF8A3D">Circuit breaker</div>
+<div class="c" style="left:1134px"></div><div class="h" style="left:1134px;color:#FF6B8B">Dead Letter Queue</div>
+<div id="bars"></div><div class="lbl" id="l1" style="left:0;top:330px"></div>
+<div class="st" id="cb" style="left:682px">CERRADO</div><div class="lbl" id="l2" style="left:567px;top:330px"></div>
+<div class="q" style="left:1164px;top:120px">cola</div><div class="q" style="left:1404px;top:120px;border-color:#FF6B8B">DLQ</div>
+<div class="tk" id="pm" style="background:#FF6B8B;left:1251px;top:150px"></div><div class="lbl" id="l3" style="left:1134px;top:330px"></div>
+<script>
+const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function retry(){const W=[40,80,160,320];for(;;){$('bars').innerHTML='';for(let i=0;i<4;i++){const b=document.createElement('div');b.style.cssText='position:absolute;left:'+(60+i*110)+'px;bottom:120px;width:80px;border-radius:10px 10px 0 0;background:'+(i<3?'#FF6B8B':'#C6F33A');$('bars').appendChild(b);
+ $('l1').textContent=i<3?'intento '+(i+1)+' falla → espera '+W[i]*5+' ms':'intento 4 ✓ éxito';
+ await b.animate([{height:'0px'},{height:W[i]*0.5+20+'px'}],{duration:500+W[i]*4,fill:'forwards'}).finished;await sleep(300)}await sleep(2500)}}
+async function breaker(){const S=[['CERRADO','#C6F33A','pasa todo; cuenta fallos'],['ABIERTO','#FF6B8B','3 fallos → falla rápido, sin llamar'],['MEDIO','#FFD166','tras 15 s deja pasar una prueba'],['CERRADO','#C6F33A','la prueba salió bien']];for(;;){for(const [t,c,l] of S){$('cb').textContent=t==='MEDIO'?'MEDIO ABIERTO':t;$('cb').style.background=c;$('cb').style.fontSize=t==='MEDIO'?'26px':'30px';$('l2').textContent=l;$('cb').animate([{transform:'scale(.85)'},{transform:'none'}],{duration:350});await sleep(1700)}}}
+async function dlq(){for(;;){for(let i=1;i<=3;i++){$('l3').textContent='entrega '+i+' de 3: falla';await $('pm').animate([{top:'150px'},{top:'215px'},{top:'150px'}],{duration:700}).finished;await sleep(250)}
+ $('l3').textContent='maxDeliveryCount → a la DLQ';await $('pm').animate([{left:'1251px'},{left:'1491px',top:'215px'}],{duration:800,fill:'forwards'}).finished;$('l3').textContent='se revisa, se corrige y se reprocesa';await sleep(2600);$('pm').getAnimations().forEach(a=>a.cancel())}}
+retry();breaker();dlq();
+</script></body></html></x-embed><div style="position:absolute;left:128px;top:750px;width:1664px;display:flex;flex-direction:row;gap:24px"><div style="flex:1;background:#141A22;border-top:6px solid #6EA8FF;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:30px;font-weight:700">Retry con backoff</h3><p style="font-size:26px;line-height:1.4;color:#A7B0BE">Espera 1 s, 2 s, 4 s… para fallas temporales (503, timeout).</p></div><div style="flex:1;background:#141A22;border-top:6px solid #FF8A3D;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:30px;font-weight:700">Circuit breaker</h3><p style="font-size:26px;line-height:1.4;color:#A7B0BE">Si la IA falla mucho, deja de llamarla un rato y usa un plan B.</p></div><div style="flex:1;background:#141A22;border-top:6px solid #FF6B8B;border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:10px"><h3 style="font-size:30px;font-weight:700">Dead Letter Queue</h3><p style="font-size:26px;line-height:1.4;color:#A7B0BE">El mensaje que falla siempre se aparta para revisarlo.</p></div></div><p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8A93A3">Fuentes: SD5 – Semana 5, Aplicando patrones de resiliencia · Cómo evitar pérdida de mensajes</p>
+
+</section>
